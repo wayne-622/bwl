@@ -7,7 +7,6 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;line-height:1.6}
-        /* 登录 */
         .auth-container{max-width:420px;margin:80px auto;padding:40px 36px;background:rgba(255,255,255,.95);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
         .auth-container .logo{text-align:center;font-size:48px;margin-bottom:8px}
         .auth-container h1{text-align:center;color:#2c3e50;margin-bottom:6px;font-size:26px}
@@ -27,7 +26,6 @@
         .auth-switch a{color:#667eea;cursor:pointer;text-decoration:none;font-weight:600}
         .auth-switch a:hover{text-decoration:underline}
         .auth-error{color:#e74c3c;font-size:13px;margin-top:4px;display:none}
-        /* 主应用 */
         .app-container{max-width:1100px;margin:24px auto;padding:0 16px;display:none}
         .app-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:rgba(255,255,255,.95);border-radius:16px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
         .app-header h1{font-size:20px;color:#2c3e50}
@@ -43,14 +41,12 @@
         .sync-indicator{font-size:11px;padding:3px 8px;border-radius:10px;display:none}
         .sync-indicator.ok{display:inline;background:#e8f5e9;color:#27ae60}
         .sync-indicator.err{display:inline;background:#fde8e8;color:#e74c3c}
-        /* 全局添加栏 */
         .global-add{background:rgba(255,255,255,.95);border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
         .global-add input[type=text]{flex:1;min-width:200px;padding:10px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;outline:none;transition:border-color .3s}
         .global-add input[type=text]:focus{border-color:#667eea}
         .global-add select{padding:10px 12px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;outline:none;cursor:pointer;background:#fff}
         .global-add .add-btn{padding:10px 24px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:transform .2s;white-space:nowrap}
         .global-add .add-btn:hover{transform:translateY(-1px)}
-        /* 工具栏 */
         .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 4px}
         .toolbar .left{display:flex;gap:6px;flex-wrap:wrap}
         .filter-chip{padding:5px 14px;border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all .2s;user-select:none}
@@ -59,7 +55,6 @@
         .toolbar .right{font-size:12px;color:#999}
         .toolbar .right .clear-btn{background:none;border:1px solid #ddd;color:#999;padding:3px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-left:8px;transition:all .2s}
         .toolbar .right .clear-btn:hover{border-color:#e74c3c;color:#e74c3c}
-        /* 格子网格 */
         .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
         .cat-card{background:rgba(255,255,255,.95);border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden;transition:transform .2s,box-shadow .2s}
         .cat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
@@ -102,7 +97,6 @@
         .global-empty{text-align:center;padding:80px 20px;color:rgba(255,255,255,.7)}
         .global-empty .empty-icon{font-size:64px;margin-bottom:16px}
         .global-empty p{font-size:16px}
-        /* 模态框 */
         .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center}
         .modal-overlay.show{display:flex}
         .modal{background:#fff;border-radius:16px;padding:28px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:modalIn .2s ease}
@@ -121,7 +115,6 @@
         .color-opt{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s}
         .color-opt:hover{transform:scale(1.15)}
         .color-opt.sel{border-color:#333;box-shadow:0 0 0 2px #fff,0 0 0 4px #333}
-        /* 设置面板 */
         .settings-panel{background:rgba(255,255,255,.95);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);display:none}
         .settings-panel.show{display:block}
         .settings-panel h3{font-size:16px;margin-bottom:6px;color:#2c3e50}
@@ -131,12 +124,31 @@
         .settings-status.ok{display:block;background:#e8f5e9;color:#27ae60}
         .settings-status.err{display:block;background:#fde8e8;color:#e74c3c}
         .settings-status.info{display:block;background:#e3f2fd;color:#1e90ff}
-        /* 加载遮罩 */
         .loading-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.7);z-index:2000;display:none;justify-content:center;align-items:center;font-size:18px;color:#667eea}
         .loading-mask.show{display:flex}
-        /* 响应式 */
+        /* 验证码面板 */
+        .verify-container{max-width:420px;margin:80px auto;padding:40px 36px;background:rgba(255,255,255,.95);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;display:none}
+        .verify-container .verify-icon{font-size:56px;margin-bottom:12px}
+        .verify-container h1{font-size:24px;color:#2c3e50;margin-bottom:6px}
+        .verify-container .verify-email{color:#667eea;font-weight:600;font-size:14px;margin-bottom:24px}
+        .code-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+        .code-inputs input{
+            width:52px;height:62px;text-align:center;font-size:28px;font-weight:700;
+            border:2px solid #e0e0e0;border-radius:12px;outline:none;transition:all .2s;
+            background:#fafafa;color:#2c3e50;
+        }
+        .code-inputs input:focus{border-color:#667eea;background:#fff;box-shadow:0 0 0 3px rgba(102,126,234,.2)}
+        .code-inputs input.filled{border-color:#667eea;background:#f0f0ff}
+        .code-inputs input.error{border-color:#e74c3c;background:#fff5f5;animation:shake .3s}
+        @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+        .verify-timer{font-size:13px;color:#999;margin-bottom:20px}
+        .verify-timer a{color:#667eea;cursor:pointer;font-weight:600}
+        .verify-timer a:hover{text-decoration:underline}
+        .verify-timer a.disabled{color:#ccc;cursor:not-allowed;pointer-events:none}
+        .verify-hint{font-size:12px;color:#bbb;margin-top:16px}
+        .verify-container .auth-error{margin-top:12px}
         @media(max-width:600px){
-            .auth-container{margin:40px 16px;padding:28px 20px}
+            .auth-container,.verify-container{margin:40px 16px;padding:28px 20px}
             .app-container{margin:12px auto}
             .app-header{padding:12px 14px;flex-wrap:wrap;gap:6px}
             .app-header h1{font-size:17px}
@@ -144,6 +156,7 @@
             .global-add{padding:12px}
             .grid{grid-template-columns:1fr}
             .task-ops{opacity:1}
+            .code-inputs input{width:44px;height:54px;font-size:24px}
         }
     </style>
 </head>
@@ -179,6 +192,26 @@
     </div>
 </div>
 
+<!-- 验证码面板 -->
+<div class="verify-container" id="verifyPanel">
+    <div class="verify-icon">🔐</div>
+    <h1>邮箱验证码</h1>
+    <p style="color:#666;font-size:14px;margin-bottom:6px">验证码已发送至</p>
+    <p class="verify-email" id="verifyEmail"></p>
+    <div class="code-inputs" id="codeInputs">
+        <input type="text" maxlength="1" inputmode="numeric" data-index="0">
+        <input type="text" maxlength="1" inputmode="numeric" data-index="1">
+        <input type="text" maxlength="1" inputmode="numeric" data-index="2">
+        <input type="text" maxlength="1" inputmode="numeric" data-index="3">
+        <input type="text" maxlength="1" inputmode="numeric" data-index="4">
+        <input type="text" maxlength="1" inputmode="numeric" data-index="5">
+    </div>
+    <div class="auth-error" id="verifyError"></div>
+    <div class="verify-timer" id="verifyTimer"></div>
+    <button class="auth-btn" onclick="goBackFromVerify()" style="background:#f0f0f0;color:#666;font-size:14px">返回登录</button>
+    <p class="verify-hint">没收到邮件？检查垃圾邮件箱，或点击上方重新发送</p>
+</div>
+
 <!-- 主应用 -->
 <div class="app-container" id="appPanel">
     <div class="app-header">
@@ -190,14 +223,9 @@
             <button class="hdr-btn logout-btn" onclick="doLogout()">退出</button>
         </div>
     </div>
-
-    <!-- 设置面板 -->
     <div class="settings-panel" id="settingsPanel">
         <h3>☁️ 云端同步</h3>
-        <p class="desc">
-            数据通过 <b>Firebase</b> 实时同步，登录同一账号即可在电脑、手机上访问。<br>
-            修改数据后自动同步到云端，无需手动操作。
-        </p>
+        <p class="desc">数据通过 <b>Firebase</b> 实时同步，登录同一账号即可在电脑、手机上访问。</p>
         <div class="settings-status" id="settingsStatus"></div>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
             <button class="m-btn secondary" onclick="exportFile()" style="font-size:13px">📤 导出备份</button>
@@ -205,29 +233,16 @@
             <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importFile(event)">
         </div>
     </div>
-
-    <!-- 全局添加栏 -->
     <div class="global-add">
         <input type="text" id="taskInput" placeholder="输入新的备忘录..." onkeypress="if(event.key==='Enter')addTask()">
         <select id="catSelect"></select>
-        <select id="priSelect">
-            <option value="low">🟢 低</option>
-            <option value="medium" selected>🟡 中</option>
-            <option value="high">🔴 高</option>
-        </select>
+        <select id="priSelect"><option value="low">🟢 低</option><option value="medium" selected>🟡 中</option><option value="high">🔴 高</option></select>
         <button class="add-btn" onclick="addTask()">+ 添加</button>
     </div>
-
-    <!-- 工具栏 -->
     <div class="toolbar">
         <div class="left" id="filterBar"></div>
-        <div class="right">
-            <span id="statsText"></span>
-            <button class="clear-btn" onclick="clearCompleted()">清除已完成</button>
-        </div>
+        <div class="right"><span id="statsText"></span><button class="clear-btn" onclick="clearCompleted()">清除已完成</button></div>
     </div>
-
-    <!-- 格子网格 -->
     <div class="grid" id="grid"></div>
 </div>
 
@@ -235,14 +250,8 @@
 <div class="modal-overlay" id="catModal">
     <div class="modal">
         <h3 id="catModalTitle">新建分类</h3>
-        <div class="form-group">
-            <label>分类名称</label>
-            <input type="text" id="catNameInput" placeholder="例如：语文、数学、工作..." maxlength="20">
-        </div>
-        <div class="form-group">
-            <label>选择颜色</label>
-            <div class="color-picker" id="colorPicker"></div>
-        </div>
+        <div class="form-group"><label>分类名称</label><input type="text" id="catNameInput" placeholder="例如：语文、数学、工作..." maxlength="20"></div>
+        <div class="form-group"><label>选择颜色</label><div class="color-picker" id="colorPicker"></div></div>
         <div class="modal-actions">
             <button class="m-btn secondary" onclick="closeCatModal()">取消</button>
             <button class="m-btn danger" id="delCatBtn" style="display:none" onclick="deleteCat()">删除分类</button>
@@ -250,7 +259,6 @@
         </div>
     </div>
 </div>
-
 <!-- 确认模态框 -->
 <div class="modal-overlay" id="confirmModal">
     <div class="modal">
@@ -262,289 +270,266 @@
         </div>
     </div>
 </div>
-
-<!-- 加载中 -->
 <div class="loading-mask" id="loadingMask">⏳ 同步中...</div>
 
-<!-- Firebase SDK (v9 compat) -->
+<!-- SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-<!-- Firebase 配置 -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="firebase-config.js"></script>
 
 <script>
-// ==================== 初始化 Firebase ====================
+// ==================== 初始化 ====================
 firebase.initializeApp(FIREBASE_CONFIG);
-const auth = firebase.auth();
-const db = firebase.database();
+const auth=firebase.auth(),db=firebase.database();
+emailjs.init(EMAILJS_CONFIG.publicKey);
 
 const COLORS=['#667eea','#764ba2','#f093fb','#4facfe','#00f2fe','#43e97b','#fa709a','#fee140','#a18cd1','#fbc2eb','#ff6b6b','#ffa502','#2ed573','#1e90ff','#ff4757'];
 const DEFAULT_CATS=[{id:'cat_default',name:'默认',color:'#78909c',isDefault:true}];
-
-let uid=null, categories=[...DEFAULT_CATS], tasks=[], filter='all', editingCatId=null;
-let syncTimer=null, isSyncing=false;
+let uid=null,categories=[...DEFAULT_CATS],tasks=[],filter='all',editingCatId=null,syncTimer=null;
+let pendingVerifyEmail='',pendingVerifyUid='',verifyCountdown=0,verifyTimerHandle=null;
 
 const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
 const showEl=(id,v)=>document.getElementById(id).style.display=v?'block':'none';
 const showErr=m=>{const e=document.getElementById('authError');e.textContent=m;e.style.display='block'};
 const hideErr=()=>document.getElementById('authError').style.display='none';
+const showVerifyErr=m=>{const e=document.getElementById('verifyError');e.textContent=m;e.style.display='block'};
+const hideVerifyErr=()=>document.getElementById('verifyError').style.display='none';
+function showLoading(v){document.getElementById('loadingMask').className=v?'loading-mask show':'loading-mask'}
+function showSync(s,msg){const el=document.getElementById('syncIndicator');el.className='sync-indicator '+(s==='ok'?'ok':s==='err'?'err':'');el.textContent=s==='ok'?'☁️ 已同步':s==='err'?'⚠️ 失败':'';if(msg)setTimeout(()=>el.textContent='',4000)}
 
-// ==================== Firebase Auth ====================
+// ==================== 登录/注册 ====================
 let isReg=false;
-function toggleAuthMode(){
-    isReg=!isReg;hideErr();
-    document.getElementById('authTitle').textContent=isReg?'注册账号':'登录备忘录';
-    document.getElementById('authSubtitle').textContent=isReg?'创建账号，开始云端同步':'使用邮箱登录，多设备共享备忘录';
-    showEl('confirmGroup',isReg);
-    document.getElementById('authBtn').textContent=isReg?'注 册':'登 录';
-    document.getElementById('switchText').textContent=isReg?'已有账号？':'没有账号？';
-    document.getElementById('switchLink').textContent=isReg?'立即登录':'立即注册';
-}
+function toggleAuthMode(){isReg=!isReg;hideErr();document.getElementById('authTitle').textContent=isReg?'注册账号':'登录备忘录';document.getElementById('authSubtitle').textContent=isReg?'创建账号，开始云端同步':'使用邮箱登录，多设备共享备忘录';showEl('confirmGroup',isReg);document.getElementById('authBtn').textContent=isReg?'注 册':'登 录';document.getElementById('switchText').textContent=isReg?'已有账号？':'没有账号？';document.getElementById('switchLink').textContent=isReg?'立即登录':'立即注册'}
 
 function handleAuth(){
     hideErr();
-    const email=document.getElementById('authEmail').value.trim();
-    const pwd=document.getElementById('authPassword').value;
+    const email=document.getElementById('authEmail').value.trim(),pwd=document.getElementById('authPassword').value;
     if(!email||!email.includes('@')){showErr('请输入有效的邮箱地址');return}
     if(pwd.length<6){showErr('密码至少需要6个字符');return}
     showLoading(true);
     if(isReg){
         const cf=document.getElementById('authConfirm').value;
         if(pwd!==cf){showErr('两次密码不一致');showLoading(false);return}
-        auth.createUserWithEmailAndPassword(email,pwd)
-            .then(()=>showLoading(false))
-            .catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
+        auth.createUserWithEmailAndPassword(email,pwd).then(cred=>{
+            pendingVerifyEmail=email;pendingVerifyUid=cred.user.uid;
+            sendVerificationCode(email,cred.user.uid);
+            showLoading(false);showVerifyPanel(email);
+        }).catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
     }else{
-        auth.signInWithEmailAndPassword(email,pwd)
-            .then(()=>showLoading(false))
-            .catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
+        auth.signInWithEmailAndPassword(email,pwd).then(cred=>{
+            if(!cred.user.emailVerified){
+                pendingVerifyEmail=email;pendingVerifyUid=cred.user.uid;
+                showLoading(false);showVerifyPanel(email);
+            }else{showLoading(false)}
+        }).catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
     }
 }
 
-function googleLogin(){
-    const provider=new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(e=>{showErr(friendlyError(e.code))});
-}
+function googleLogin(){const p=new firebase.auth.GoogleAuthProvider();auth.signInWithPopup(p).catch(e=>{showErr(friendlyError(e.code))})}
 
-function friendlyError(code){
-    const m={'auth/email-already-in-use':'该邮箱已注册','auth/user-not-found':'账号不存在','auth/wrong-password':'密码错误',
-        'auth/invalid-email':'邮箱格式不正确','auth/weak-password':'密码至少6个字符','auth/too-many-requests':'请求过于频繁，请稍后再试',
-        'auth/popup-closed-by-user':'登录窗口已关闭','auth/network-request-failed':'网络连接失败'};
-    return m[code]||'操作失败：'+code;
-}
+function friendlyError(c){const m={'auth/email-already-in-use':'该邮箱已注册','auth/user-not-found':'账号不存在','auth/wrong-password':'密码错误','auth/invalid-email':'邮箱格式不正确','auth/weak-password':'密码至少6个字符','auth/too-many-requests':'请求过于频繁，请稍后再试','auth/popup-closed-by-user':'登录窗口已关闭','auth/network-request-failed':'网络连接失败'};return m[c]||'操作失败：'+c}
 
 function doLogout(){
-    auth.signOut();
-    categories=[...DEFAULT_CATS];tasks=[];uid=null;
+    auth.signOut();categories=[...DEFAULT_CATS];tasks=[];uid=null;
     document.getElementById('appPanel').style.display='none';
+    document.getElementById('verifyPanel').style.display='none';
     document.getElementById('authPanel').style.display='block';
-    document.getElementById('authEmail').value='';
-    document.getElementById('authPassword').value='';
-    hideErr();
+    document.getElementById('authEmail').value='';document.getElementById('authPassword').value='';hideErr();
 }
 
-function showLoading(v){document.getElementById('loadingMask').className=v?'loading-mask show':'loading-mask'}
-function showSync(s,msg){
-    const el=document.getElementById('syncIndicator');
-    el.className='sync-indicator '+(s==='ok'?'ok':s==='err'?'err':'');
-    el.textContent=s==='ok'?'☁️ 已同步':s==='err'?'⚠️ 同步失败':'';
-    if(msg)setTimeout(()=>el.textContent='',4000);
+// ==================== 自定义验证码 ====================
+function generateCode(){return String(Math.floor(100000+Math.random()*900000))}
+
+function sendVerificationCode(email,targetUid){
+    const code=generateCode();
+    const expiresAt=Date.now()+10*60*1000; // 10分钟有效
+    // 存到 Firebase Realtime Database
+    db.ref('verifyCodes/'+targetUid).set({code,expiresAt,email});
+    // 发送邮件
+    emailjs.send(EMAILJS_CONFIG.serviceID,EMAILJS_CONFIG.templateID,{
+        to_email:email,
+        code:code,
+        time:'10分钟'
+    }).then(()=>console.log('验证码已发送')).catch(e=>console.error('邮件发送失败:',e));
+    // 启动倒计时
+    startVerifyCountdown();
 }
 
-// 监听认证状态
-auth.onAuthStateChanged(user=>{
-    if(user){
-        uid=user.uid;
-        document.getElementById('authPanel').style.display='none';
-        document.getElementById('appPanel').style.display='block';
-        document.getElementById('userEmailDisplay').textContent=user.email;
-        listenData();
-    }else if(!uid){
-        // 未登录，停留在登录页
+function showVerifyPanel(email){
+    document.getElementById('authPanel').style.display='none';
+    document.getElementById('appPanel').style.display='none';
+    document.getElementById('verifyPanel').style.display='block';
+    document.getElementById('verifyEmail').textContent=email;
+    hideVerifyErr();
+    // 清空输入框
+    document.querySelectorAll('#codeInputs input').forEach(inp=>{inp.value='';inp.classList.remove('filled','error')});
+    document.querySelector('#codeInputs input[data-index="0"]').focus();
+    if(!verifyCountdown)sendVerificationCode(email,pendingVerifyUid);
+}
+
+function startVerifyCountdown(){
+    verifyCountdown=60;
+    if(verifyTimerHandle)clearInterval(verifyTimerHandle);
+    updateTimerDisplay();
+    verifyTimerHandle=setInterval(()=>{
+        verifyCountdown--;
+        updateTimerDisplay();
+        if(verifyCountdown<=0)clearInterval(verifyTimerHandle);
+    },1000);
+}
+
+function updateTimerDisplay(){
+    const el=document.getElementById('verifyTimer');
+    if(verifyCountdown>0){el.innerHTML=`<span style="color:#999">${verifyCountdown}s 后可重新发送</span>`}
+    else{el.innerHTML=`<a onclick="resendCode()">重新发送验证码</a>`}
+}
+
+function resendCode(){
+    if(verifyCountdown>0)return;
+    if(pendingVerifyEmail&&pendingVerifyUid){
+        sendVerificationCode(pendingVerifyEmail,pendingVerifyUid);
+        hideVerifyErr();
+        document.querySelectorAll('#codeInputs input').forEach(inp=>{inp.value='';inp.classList.remove('filled','error')});
+        document.querySelector('#codeInputs input[data-index="0"]').focus();
     }
+}
+
+function verifyCode(){
+    const inputs=document.querySelectorAll('#codeInputs input');
+    let code='';inputs.forEach(inp=>code+=inp.value);
+    if(code.length<6)return;
+    hideVerifyErr();
+    // 从 Firebase 验证
+    db.ref('verifyCodes/'+pendingVerifyUid).once('value',snap=>{
+        const data=snap.val();
+        if(!data){showVerifyErr('验证码不存在，请重新发送');inputs.forEach(i=>i.classList.add('error'));return}
+        if(Date.now()>data.expiresAt){showVerifyErr('验证码已过期，请重新发送');inputs.forEach(i=>i.classList.add('error'));return}
+        if(data.code!==code){showVerifyErr('验证码错误');inputs.forEach(i=>i.classList.add('error'));return}
+        // 验证通过！标记邮箱已验证
+        db.ref('verifiedEmails/'+pendingVerifyUid).set({email:pendingVerifyEmail,verifiedAt:firebase.database.ServerValue.TIMESTAMP});
+        db.ref('verifyCodes/'+pendingVerifyUid).remove();
+        // 设置自定义 claims 或直接放行
+        enterApp(pendingVerifyUid,pendingVerifyEmail);
+    });
+}
+
+function enterApp(userId,email){
+    uid=userId;
+    document.getElementById('verifyPanel').style.display='none';
+    document.getElementById('authPanel').style.display='none';
+    document.getElementById('appPanel').style.display='block';
+    document.getElementById('userEmailDisplay').textContent=email;
+    listenData();
+}
+
+function goBackFromVerify(){
+    auth.signOut();
+    document.getElementById('verifyPanel').style.display='none';
+    document.getElementById('authPanel').style.display='block';
+    hideErr();hideVerifyErr();
+    if(verifyTimerHandle)clearInterval(verifyTimerHandle);
+    verifyCountdown=0;
+}
+
+// 验证码输入框自动跳转
+document.querySelectorAll('#codeInputs input').forEach(inp=>{
+    inp.addEventListener('input',function(){
+        this.value=this.value.replace(/[^0-9]/g,'');
+        this.classList.toggle('filled',this.value!=='');
+        if(this.value&&this.dataset.index<5){
+            document.querySelector('#codeInputs input[data-index="'+(parseInt(this.dataset.index)+1)+'"]').focus();
+        }
+        if(this.value&&this.dataset.index==='5'){verifyCode()}
+    });
+    inp.addEventListener('keydown',function(e){
+        if(e.key==='Backspace'&&!this.value&&this.dataset.index>0){
+            const prev=document.querySelector('#codeInputs input[data-index="'+(parseInt(this.dataset.index)-1)+'"]');
+            prev.focus();prev.value='';prev.classList.remove('filled');
+        }
+    });
+    inp.addEventListener('paste',function(e){
+        e.preventDefault();
+        const text=(e.clipboardData||window.clipboardData).getData('text').replace(/[^0-9]/g,'').slice(0,6);
+        text.split('').forEach((ch,i)=>{
+            const target=document.querySelector('#codeInputs input[data-index="'+i+'"]');
+            if(target){target.value=ch;target.classList.add('filled')}
+        });
+        if(text.length===6)verifyCode();
+        else if(text.length>0)document.querySelector('#codeInputs input[data-index="'+text.length+'"]').focus();
+    });
 });
 
-// Enter 键登录
+// Enter 键
 document.getElementById('authPassword').onkeypress=e=>{if(e.key==='Enter')handleAuth()};
 document.getElementById('authConfirm').onkeypress=e=>{if(e.key==='Enter')handleAuth()};
 
-// ==================== Firebase Realtime Database ====================
+// ==================== 认证状态监听 ====================
+auth.onAuthStateChanged(user=>{
+    if(user){
+        pendingVerifyUid=user.uid;pendingVerifyEmail=user.email;
+        // 检查是否已通过自定义验证码验证
+        db.ref('verifiedEmails/'+user.uid).once('value',snap=>{
+            if(snap.val()){
+                uid=user.uid;
+                document.getElementById('verifyPanel').style.display='none';
+                document.getElementById('authPanel').style.display='none';
+                document.getElementById('appPanel').style.display='block';
+                document.getElementById('userEmailDisplay').textContent=user.email;
+                listenData();
+            }else{
+                showVerifyPanel(user.email);
+            }
+        });
+    }
+});
+
+// ==================== Firebase Database ====================
 function getUserPath(){return 'users/'+uid}
-
 function listenData(){
-    if(!uid)return;
-    showLoading(true);
-    // 监听分类
-    db.ref(getUserPath()+'/cats').on('value',snap=>{
-        const val=snap.val();
-        categories=val?Object.values(val):[...DEFAULT_CATS];
-        // 确保默认分类存在
-        if(!categories.find(c=>c.id==='cat_default'))categories.unshift({id:'cat_default',name:'默认',color:'#78909c',isDefault:true});
-        renderAll();
-    });
-    // 监听任务
-    db.ref(getUserPath()+'/tasks').on('value',snap=>{
-        const val=snap.val();
-        tasks=val?Object.values(val):[];
-        renderAll();
-        showLoading(false);
-        showSync('ok',true);
-    });
-}
-
-function saveToFirebase(path,data){
-    if(!uid)return;
-    db.ref(getUserPath()+'/'+path).set(data).then(()=>showSync('ok',true)).catch(e=>{showSync('err',true);console.error('Firebase write error:',e)});
+    if(!uid)return;showLoading(true);
+    db.ref(getUserPath()+'/cats').on('value',s=>{const v=s.val();categories=v?Object.values(v):[...DEFAULT_CATS];if(!categories.find(c=>c.id==='cat_default'))categories.unshift({id:'cat_default',name:'默认',color:'#78909c',isDefault:true});renderAll()});
+    db.ref(getUserPath()+'/tasks').on('value',s=>{const v=s.val();tasks=v?Object.values(v):[];renderAll();showLoading(false);showSync('ok',true)});
 }
 function saveAllToFirebase(){
-    const catsObj={};categories.forEach(c=>catsObj[c.id]=c);
-    const tasksObj={};tasks.forEach(t=>tasksObj[t.id]=t);
-    db.ref(getUserPath()).set({cats:catsObj,tasks:tasksObj,updatedAt:firebase.database.ServerValue.TIMESTAMP})
-        .then(()=>showSync('ok',true))
-        .catch(e=>{showSync('err',true);console.error('Firebase write error:',e)});
+    const co={},to={};categories.forEach(c=>co[c.id]=c);tasks.forEach(t=>to[t.id]=t);
+    db.ref(getUserPath()).set({cats:co,tasks:to,updatedAt:firebase.database.ServerValue.TIMESTAMP}).then(()=>showSync('ok',true)).catch(()=>showSync('err',true));
 }
-function scheduleSave(){
-    if(syncTimer)clearTimeout(syncTimer);
-    syncTimer=setTimeout(saveAllToFirebase,800);
-}
+function scheduleSave(){if(syncTimer)clearTimeout(syncTimer);syncTimer=setTimeout(saveAllToFirebase,800)}
 
-// ==================== 设置 ====================
+// ==================== 设置/导入导出 ====================
 function toggleSettings(){document.getElementById('settingsPanel').classList.toggle('show')}
-
-// ==================== 导出/导入 ====================
-function exportFile(){
-    const data={v:2,email:auth.currentUser?.email||'',cats:categories,tasks:tasks,ts:Date.now()};
-    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-    a.download=`备忘录_${new Date().toLocaleDateString().replace(/\//g,'-')}.json`;a.click();URL.revokeObjectURL(a.href);
-    const ss=document.getElementById('settingsStatus');ss.className='settings-status ok';ss.textContent='✅ 备份已下载';
-    setTimeout(()=>ss.style.display='none',3000);
-}
-function importFile(e){
-    const f=e.target.files[0];if(!f)return;
-    const r=new FileReader();
-    r.onload=function(ev){
-        try{
-            const d=JSON.parse(ev.target.result);
-            if(d.categories&&!d.cats)d.cats=d.categories;
-            if(d.tasks)d.tasks=d.tasks.map(t=>({id:t.id,text:t.text,catId:t.catId||t.categoryId||'cat_default',pri:t.pri||t.priority||'medium',completed:!!t.completed,createdAt:t.createdAt||Date.now()}));
-            if(!d.cats&&!d.tasks){alert('无效数据文件');return}
-            showCfm('导入数据',`即将导入 ${(d.tasks||[]).length} 条备忘录，当前数据将被覆盖。`,()=>{
-                categories=d.cats||[...DEFAULT_CATS];
-                tasks=d.tasks||[];
-                saveAllToFirebase();
-                const ss=document.getElementById('settingsStatus');ss.className='settings-status ok';ss.textContent='✅ 导入成功，数据已同步到云端';
-                setTimeout(()=>ss.style.display='none',3000);
-            });
-        }catch(err){alert('文件格式错误：'+err.message)}
-    };r.readAsText(f);e.target.value='';
-}
+function exportFile(){const d={v:2,email:auth.currentUser?.email||'',cats:categories,tasks:tasks,ts:Date.now()};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));a.download=`备忘录_${new Date().toLocaleDateString().replace(/\//g,'-')}.json`;a.click();URL.revokeObjectURL(a.href);const ss=document.getElementById('settingsStatus');ss.className='settings-status ok';ss.textContent='✅ 备份已下载';setTimeout(()=>ss.style.display='none',3000)}
+function importFile(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{const d=JSON.parse(ev.target.result);if(d.categories&&!d.cats)d.cats=d.categories;if(d.tasks)d.tasks=d.tasks.map(t=>({id:t.id,text:t.text,catId:t.catId||t.categoryId||'cat_default',pri:t.pri||t.priority||'medium',completed:!!t.completed,createdAt:t.createdAt||Date.now()}));if(!d.cats&&!d.tasks){alert('无效数据文件');return}showCfm('导入数据',`即将导入 ${(d.tasks||[]).length} 条备忘录，当前数据将被覆盖。`,()=>{categories=d.cats||[...DEFAULT_CATS];tasks=d.tasks||[];saveAllToFirebase();const ss=document.getElementById('settingsStatus');ss.className='settings-status ok';ss.textContent='✅ 导入成功';setTimeout(()=>ss.style.display='none',3000)})}catch(err){alert('文件格式错误：'+err.message)}};r.readAsText(f);e.target.value=''}
 
 // ==================== 分类 ====================
 function catById(id){return categories.find(c=>c.id===id)}
 function catCount(id){return tasks.filter(t=>t.catId===id).length}
-
-function openCatModal(editId){
-    editingCatId=editId||null;
-    document.getElementById('catModalTitle').textContent=editId?'编辑分类':'新建分类';
-    if(editId){const c=catById(editId);document.getElementById('catNameInput').value=c.name;showEl('delCatBtn',!c.isDefault);renderColors(c.color)}
-    else{document.getElementById('catNameInput').value='';showEl('delCatBtn',false);renderColors(COLORS[Math.floor(Math.random()*COLORS.length)])}
-    document.getElementById('catModal').classList.add('show');document.getElementById('catNameInput').focus();
-}
+function openCatModal(editId){editingCatId=editId||null;document.getElementById('catModalTitle').textContent=editId?'编辑分类':'新建分类';if(editId){const c=catById(editId);document.getElementById('catNameInput').value=c.name;showEl('delCatBtn',!c.isDefault);renderColors(c.color)}else{document.getElementById('catNameInput').value='';showEl('delCatBtn',false);renderColors(COLORS[Math.floor(Math.random()*COLORS.length)])}document.getElementById('catModal').classList.add('show');document.getElementById('catNameInput').focus()}
 function closeCatModal(){document.getElementById('catModal').classList.remove('show');editingCatId=null}
-function renderColors(sel){
-    const el=document.getElementById('colorPicker');el.innerHTML='';
-    COLORS.forEach(c=>{const d=document.createElement('div');d.className='color-opt'+(c===sel?' sel':'');d.style.background=c;d.onclick=()=>{el.querySelectorAll('.color-opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel')};el.appendChild(d)});
-}
+function renderColors(sel){const el=document.getElementById('colorPicker');el.innerHTML='';COLORS.forEach(c=>{const d=document.createElement('div');d.className='color-opt'+(c===sel?' sel':'');d.style.background=c;d.onclick=()=>{el.querySelectorAll('.color-opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel')};el.appendChild(d)})}
 function getSelColor(){const s=document.querySelector('#colorPicker .sel');return s?s.style.background:COLORS[0]}
-
-function saveCat(){
-    const name=document.getElementById('catNameInput').value.trim();if(!name){alert('请输入分类名称');return}
-    const color=getSelColor();
-    if(editingCatId){const c=catById(editingCatId);c.name=name;c.color=color}
-    else categories.push({id:'cat_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),name,color});
-    closeCatModal();renderAll();scheduleSave();
-}
-function deleteCat(){
-    if(!editingCatId)return;const c=catById(editingCatId);if(c.isDefault)return;
-    const cnt=catCount(editingCatId);
-    const doDel=()=>{tasks.forEach(t=>{if(t.catId===editingCatId)t.catId='cat_default'});categories=categories.filter(x=>x.id!==editingCatId);if(filter===editingCatId)filter='all';closeCatModal();renderAll();scheduleSave()};
-    if(cnt>0)showCfm('删除分类',`该分类下有 ${cnt} 条备忘录，删除后将移至"默认"。`,doDel);else doDel();
-}
+function saveCat(){const name=document.getElementById('catNameInput').value.trim();if(!name){alert('请输入分类名称');return}const color=getSelColor();if(editingCatId){const c=catById(editingCatId);c.name=name;c.color=color}else categories.push({id:'cat_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),name,color});closeCatModal();renderAll();scheduleSave()}
+function deleteCat(){if(!editingCatId)return;const c=catById(editingCatId);if(c.isDefault)return;const cnt=catCount(editingCatId);const doDel=()=>{tasks.forEach(t=>{if(t.catId===editingCatId)t.catId='cat_default'});categories=categories.filter(x=>x.id!==editingCatId);if(filter===editingCatId)filter='all';closeCatModal();renderAll();scheduleSave()};if(cnt>0)showCfm('删除分类',`该分类下有 ${cnt} 条备忘录，删除后将移至"默认"。`,doDel);else doDel()}
 
 // ==================== 确认框 ====================
 function showCfm(t,m,ok){document.getElementById('cfmTitle').textContent=t;document.getElementById('cfmMsg').textContent=m;document.getElementById('confirmModal').classList.add('show');document.getElementById('cfmOkBtn').onclick=()=>{closeCfm();ok()}}
 function closeCfm(){document.getElementById('confirmModal').classList.remove('show')}
 
 // ==================== 任务操作 ====================
-function addTask(){
-    const input=document.getElementById('taskInput');const text=input.value.trim();if(!text)return;
-    const catId=document.getElementById('catSelect').value;const pri=document.getElementById('priSelect').value;
-    tasks.unshift({id:'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),text,catId,pri,completed:false,createdAt:Date.now()});
-    input.value='';renderAll();scheduleSave();
-}
-function addTaskToCat(catId){
-    const input=document.getElementById('cardInput_'+catId);const text=input.value.trim();if(!text)return;
-    tasks.unshift({id:'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),text,catId,pri:'medium',completed:false,createdAt:Date.now()});
-    input.value='';renderAll();scheduleSave();
-}
+function addTask(){const input=document.getElementById('taskInput');const text=input.value.trim();if(!text)return;const catId=document.getElementById('catSelect').value;const pri=document.getElementById('priSelect').value;tasks.unshift({id:'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),text,catId,pri,completed:false,createdAt:Date.now()});input.value='';renderAll();scheduleSave()}
+function addTaskToCat(catId){const input=document.getElementById('cardInput_'+catId);const text=input.value.trim();if(!text)return;tasks.unshift({id:'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),text,catId,pri:'medium',completed:false,createdAt:Date.now()});input.value='';renderAll();scheduleSave()}
 function toggleTask(id){const t=tasks.find(x=>x.id===id);if(t){t.completed=!t.completed;renderAll();scheduleSave()}}
 function deleteTask(id){tasks=tasks.filter(x=>x.id!==id);renderAll();scheduleSave()}
-function editTask(taskId){
-    const el=document.querySelector('.task-item[data-id="'+taskId+'"]');if(!el)return;
-    const txt=el.querySelector('.task-text');const cur=txt.textContent;
-    const inp=document.createElement('input');inp.type='text';inp.value=cur;inp.className='task-text editing';
-    txt.replaceWith(inp);inp.focus();
-    const save=()=>{const t=tasks.find(x=>x.id===taskId);if(t){t.text=inp.value.trim()||cur;scheduleSave()}renderAll()};
-    inp.onkeypress=e=>{if(e.key==='Enter')save()};inp.onkeydown=e=>{if(e.key==='Escape')renderAll()};inp.onblur=save;
-}
+function editTask(taskId){const el=document.querySelector('.task-item[data-id="'+taskId+'"]');if(!el)return;const txt=el.querySelector('.task-text');const cur=txt.textContent;const inp=document.createElement('input');inp.type='text';inp.value=cur;inp.className='task-text editing';txt.replaceWith(inp);inp.focus();const save=()=>{const t=tasks.find(x=>x.id===taskId);if(t){t.text=inp.value.trim()||cur;scheduleSave()}renderAll()};inp.onkeypress=e=>{if(e.key==='Enter')save()};inp.onkeydown=e=>{if(e.key==='Escape')renderAll()};inp.onblur=save}
 function clearCompleted(){const cnt=tasks.filter(t=>t.completed).length;if(!cnt)return;showCfm('清除已完成',`确定清除 ${cnt} 条已完成的备忘录？`,()=>{tasks=tasks.filter(t=>!t.completed);renderAll();scheduleSave()})}
 
 // ==================== 渲染 ====================
 function renderAll(){renderFilter();renderCatSelect();renderGrid()}
-
-function renderFilter(){
-    const el=document.getElementById('filterBar');el.innerHTML='';
-    const allBtn=document.createElement('span');allBtn.className='filter-chip'+(filter==='all'?' active':'');
-    allBtn.style.background=filter==='all'?'#667eea':'#f0f0f0';allBtn.style.color=filter==='all'?'#fff':'#666';
-    allBtn.textContent='全部('+tasks.filter(t=>!t.completed).length+')';allBtn.onclick=()=>{filter='all';renderAll()};el.appendChild(allBtn);
-    const addBtn=document.createElement('span');addBtn.className='filter-chip';addBtn.style.background='#f0f0f0';addBtn.style.color='#667eea';addBtn.textContent='+';addBtn.title='新建分类';addBtn.onclick=()=>openCatModal();el.appendChild(addBtn);
-    document.getElementById('statsText').textContent=tasks.length+' 条备忘录，'+tasks.filter(t=>t.completed).length+' 已完成';
-}
-
+function renderFilter(){const el=document.getElementById('filterBar');el.innerHTML='';const allBtn=document.createElement('span');allBtn.className='filter-chip'+(filter==='all'?' active':'');allBtn.style.background=filter==='all'?'#667eea':'#f0f0f0';allBtn.style.color=filter==='all'?'#fff':'#666';allBtn.textContent='全部('+tasks.filter(t=>!t.completed).length+')';allBtn.onclick=()=>{filter='all';renderAll()};el.appendChild(allBtn);const addBtn=document.createElement('span');addBtn.className='filter-chip';addBtn.style.background='#f0f0f0';addBtn.style.color='#667eea';addBtn.textContent='+';addBtn.title='新建分类';addBtn.onclick=()=>openCatModal();el.appendChild(addBtn);document.getElementById('statsText').textContent=tasks.length+' 条备忘录，'+tasks.filter(t=>t.completed).length+' 已完成'}
 function renderCatSelect(){const sel=document.getElementById('catSelect');const v=sel.value;sel.innerHTML='';categories.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o)});if(v&&categories.find(c=>c.id===v))sel.value=v}
-
-function renderGrid(){
-    const grid=document.getElementById('grid');grid.innerHTML='';
-    const cats=filter==='all'?categories:categories.filter(c=>c.id===filter);
-    if(cats.length===0){grid.innerHTML='<div class="global-empty"><div class="empty-icon">📋</div><p>点击上方 "+" 创建分类开始使用</p></div>';return}
-    const priOrd={high:0,medium:1,low:2};const priLabel={high:'🔴',medium:'🟡',low:'🟢'};
-    cats.forEach(cat=>{
-        const catTasks=tasks.filter(t=>t.catId===cat.id);
-        const incomplete=catTasks.filter(t=>!t.completed).sort((a,b)=>priOrd[a.pri]-priOrd[b.pri]);
-        const done=catTasks.filter(t=>t.completed);const sorted=[...incomplete,...done];
-        const card=document.createElement('div');card.className='cat-card';
-        const head=document.createElement('div');head.className='card-head';head.style.background=cat.color;
-        head.innerHTML=`<div class="cat-info"><div class="cat-icon" style="background:rgba(255,255,255,.25)">${cat.name[0]}</div><span class="cat-name">${esc(cat.name)}</span><span class="cat-count">${incomplete.length}/${catTasks.length}</span></div><div class="card-actions"><button class="card-act-btn" title="编辑分类" data-edit="${cat.id}">✏️</button></div>`;
-        head.querySelector('[data-edit]').onclick=()=>openCatModal(cat.id);card.appendChild(head);
-        const qa=document.createElement('div');qa.className='card-quick-add';
-        qa.innerHTML=`<input type="text" id="cardInput_${cat.id}" placeholder="快速添加..." onkeypress="if(event.key==='Enter')addTaskToCat('${cat.id}')"><button class="quick-add-btn" style="background:${cat.color}" onclick="addTaskToCat('${cat.id}')">+</button>`;
-        card.appendChild(qa);
-        const list=document.createElement('div');list.className='card-tasks';
-        if(sorted.length===0){list.innerHTML='<div class="card-empty"><div class="empty-icon">✨</div>暂无备忘录</div>'}
-        else{sorted.forEach(t=>{
-            const item=document.createElement('div');item.className='task-item'+(t.completed?' done':'');item.setAttribute('data-id',t.id);
-            item.innerHTML=`<input type="checkbox" class="task-chk" ${t.completed?'checked':''}><div class="task-content"><span class="task-text">${esc(t.text)}</span>${t.pri!=='medium'?'<span class="task-priority p-'+t.pri+'">'+priLabel[t.pri]+' '+(t.pri==='high'?'紧急':'不急')+'</span>':''}</div><div class="task-ops"><button class="task-op" title="编辑" data-e="${t.id}">✏</button><button class="task-op del" title="删除" data-d="${t.id}">✕</button></div>`;
-            item.querySelector('.task-chk').onchange=()=>toggleTask(t.id);
-            item.querySelector('[data-e]').onclick=()=>editTask(t.id);
-            item.querySelector('[data-d]').onclick=()=>deleteTask(t.id);
-            list.appendChild(item);
-        })}
-        card.appendChild(list);grid.appendChild(card);
-    });
-}
+function renderGrid(){const grid=document.getElementById('grid');grid.innerHTML='';const cats=filter==='all'?categories:categories.filter(c=>c.id===filter);if(cats.length===0){grid.innerHTML='<div class="global-empty"><div class="empty-icon">📋</div><p>点击上方 "+" 创建分类开始使用</p></div>';return}const priOrd={high:0,medium:1,low:2};const priLabel={high:'🔴',medium:'🟡',low:'🟢'};cats.forEach(cat=>{const catTasks=tasks.filter(t=>t.catId===cat.id);const incomplete=catTasks.filter(t=>!t.completed).sort((a,b)=>priOrd[a.pri]-priOrd[b.pri]);const done=catTasks.filter(t=>t.completed);const sorted=[...incomplete,...done];const card=document.createElement('div');card.className='cat-card';const head=document.createElement('div');head.className='card-head';head.style.background=cat.color;head.innerHTML=`<div class="cat-info"><div class="cat-icon" style="background:rgba(255,255,255,.25)">${cat.name[0]}</div><span class="cat-name">${esc(cat.name)}</span><span class="cat-count">${incomplete.length}/${catTasks.length}</span></div><div class="card-actions"><button class="card-act-btn" title="编辑分类" data-edit="${cat.id}">✏️</button></div>`;head.querySelector('[data-edit]').onclick=()=>openCatModal(cat.id);card.appendChild(head);const qa=document.createElement('div');qa.className='card-quick-add';qa.innerHTML=`<input type="text" id="cardInput_${cat.id}" placeholder="快速添加..." onkeypress="if(event.key==='Enter')addTaskToCat('${cat.id}')"><button class="quick-add-btn" style="background:${cat.color}" onclick="addTaskToCat('${cat.id}')">+</button>`;card.appendChild(qa);const list=document.createElement('div');list.className='card-tasks';if(sorted.length===0){list.innerHTML='<div class="card-empty"><div class="empty-icon">✨</div>暂无备忘录</div>'}else{sorted.forEach(t=>{const item=document.createElement('div');item.className='task-item'+(t.completed?' done':'');item.setAttribute('data-id',t.id);item.innerHTML=`<input type="checkbox" class="task-chk" ${t.completed?'checked':''}><div class="task-content"><span class="task-text">${esc(t.text)}</span>${t.pri!=='medium'?'<span class="task-priority p-'+t.pri+'">'+priLabel[t.pri]+' '+(t.pri==='high'?'紧急':'不急')+'</span>':''}</div><div class="task-ops"><button class="task-op" title="编辑" data-e="${t.id}">✏</button><button class="task-op del" title="删除" data-d="${t.id}">✕</button></div>`;item.querySelector('.task-chk').onchange=()=>toggleTask(t.id);item.querySelector('[data-e]').onclick=()=>editTask(t.id);item.querySelector('[data-d]').onclick=()=>deleteTask(t.id);list.appendChild(item)})}card.appendChild(list);grid.appendChild(card)})}
 </script>
 </body>
 </html>
