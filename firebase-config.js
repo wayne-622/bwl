@@ -1,7 +1,7 @@
 // Firebase 配置 - 从 Firebase Console 获取
 // https://console.firebase.google.com → 项目设置 → 常规 → 你的应用
 const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyCGlQ0wzn3355fi2RQEF3AyXple1OLr5y8",
+    apiKey: "AIzaSyCGlQ0wzn3355fi2RQEF3AyXplejOLr5y8",
     authDomain: "wayne-chat.firebaseapp.com",
     databaseURL: "https://wayne-chat-default-rtdb.firebaseio.com",
     projectId: "wayne-chat",
