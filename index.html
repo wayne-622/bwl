@@ -1,225 +1,550 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>实时聊天室</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备忘录</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;line-height:1.6}
+        /* 登录 */
+        .auth-container{max-width:420px;margin:80px auto;padding:40px 36px;background:rgba(255,255,255,.95);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+        .auth-container .logo{text-align:center;font-size:48px;margin-bottom:8px}
+        .auth-container h1{text-align:center;color:#2c3e50;margin-bottom:6px;font-size:26px}
+        .auth-container .subtitle{text-align:center;color:#95a5a6;font-size:14px;margin-bottom:28px}
+        .form-group{margin-bottom:18px}
+        .form-group label{display:block;font-size:14px;color:#555;margin-bottom:6px;font-weight:600}
+        .form-group input{width:100%;padding:12px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:15px;transition:border-color .3s;outline:none;background:#fff}
+        .form-group input:focus{border-color:#667eea}
+        .auth-btn{width:100%;padding:13px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:6px}
+        .auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(102,126,234,.4)}
+        .google-btn{width:100%;padding:12px;background:#fff;color:#333;border:2px solid #e0e0e0;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+        .google-btn:hover{border-color:#667eea;background:#f8f8ff}
+        .divider{text-align:center;color:#ccc;margin:16px 0;font-size:13px;position:relative}
+        .divider::before,.divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:#e0e0e0}
+        .divider::before{left:0}.divider::after{right:0}
+        .auth-switch{text-align:center;margin-top:20px;font-size:14px;color:#777}
+        .auth-switch a{color:#667eea;cursor:pointer;text-decoration:none;font-weight:600}
+        .auth-switch a:hover{text-decoration:underline}
+        .auth-error{color:#e74c3c;font-size:13px;margin-top:4px;display:none}
+        /* 主应用 */
+        .app-container{max-width:1100px;margin:24px auto;padding:0 16px;display:none}
+        .app-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:rgba(255,255,255,.95);border-radius:16px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+        .app-header h1{font-size:20px;color:#2c3e50}
+        .header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+        .user-email{font-size:12px;color:#999;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .hdr-btn{padding:7px 14px;border:none;border-radius:8px;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
+        .cloud-btn{background:#e8f5e9;color:#27ae60}
+        .cloud-btn:hover{background:#c8e6c9}
+        .settings-btn{background:#fff3e0;color:#f39c12}
+        .settings-btn:hover{background:#ffe0b2}
+        .logout-btn{background:#fff0f0;color:#e74c3c}
+        .logout-btn:hover{background:#ffe0e0}
+        .sync-indicator{font-size:11px;padding:3px 8px;border-radius:10px;display:none}
+        .sync-indicator.ok{display:inline;background:#e8f5e9;color:#27ae60}
+        .sync-indicator.err{display:inline;background:#fde8e8;color:#e74c3c}
+        /* 全局添加栏 */
+        .global-add{background:rgba(255,255,255,.95);border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+        .global-add input[type=text]{flex:1;min-width:200px;padding:10px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;outline:none;transition:border-color .3s}
+        .global-add input[type=text]:focus{border-color:#667eea}
+        .global-add select{padding:10px 12px;border:2px solid #e0e0e0;border-radius:10px;font-size:13px;outline:none;cursor:pointer;background:#fff}
+        .global-add .add-btn{padding:10px 24px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:transform .2s;white-space:nowrap}
+        .global-add .add-btn:hover{transform:translateY(-1px)}
+        /* 工具栏 */
+        .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 4px}
+        .toolbar .left{display:flex;gap:6px;flex-wrap:wrap}
+        .filter-chip{padding:5px 14px;border-radius:16px;font-size:12px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all .2s;user-select:none}
+        .filter-chip:hover{transform:translateY(-1px)}
+        .filter-chip.active{box-shadow:0 2px 8px rgba(0,0,0,.15)}
+        .toolbar .right{font-size:12px;color:#999}
+        .toolbar .right .clear-btn{background:none;border:1px solid #ddd;color:#999;padding:3px 10px;border-radius:6px;font-size:11px;cursor:pointer;margin-left:8px;transition:all .2s}
+        .toolbar .right .clear-btn:hover{border-color:#e74c3c;color:#e74c3c}
+        /* 格子网格 */
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+        .cat-card{background:rgba(255,255,255,.95);border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.08);overflow:hidden;transition:transform .2s,box-shadow .2s}
+        .cat-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+        .card-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+        .card-head .cat-info{display:flex;align-items:center;gap:8px}
+        .card-head .cat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:700}
+        .card-head .cat-name{font-size:15px;font-weight:700;color:#fff}
+        .card-head .cat-count{font-size:11px;background:rgba(255,255,255,.3);padding:2px 8px;border-radius:10px;color:#fff;margin-left:4px}
+        .card-head .card-actions{display:flex;gap:4px}
+        .card-head .card-act-btn{width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .2s;background:rgba(255,255,255,.2);color:#fff}
+        .card-head .card-act-btn:hover{background:rgba(255,255,255,.4)}
+        .card-quick-add{padding:8px 12px;border-top:1px solid #f0f0f0;display:flex;gap:6px}
+        .card-quick-add input{flex:1;padding:7px 10px;border:1.5px solid #e8e8e8;border-radius:8px;font-size:13px;outline:none;transition:border-color .2s}
+        .card-quick-add input:focus{border-color:#667eea}
+        .card-quick-add .quick-add-btn{padding:7px 12px;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;color:#fff;transition:opacity .2s}
+        .card-quick-add .quick-add-btn:hover{opacity:.85}
+        .card-tasks{max-height:380px;overflow-y:auto;padding:4px 0}
+        .card-tasks::-webkit-scrollbar{width:4px}
+        .card-tasks::-webkit-scrollbar-thumb{background:#ddd;border-radius:4px}
+        .task-item{display:flex;align-items:flex-start;padding:8px 14px;gap:8px;transition:background .15s;border-bottom:1px solid #f8f8f8}
+        .task-item:last-child{border-bottom:none}
+        .task-item:hover{background:#fafafa}
+        .task-item.done{opacity:.55}
+        .task-item.done .task-text{text-decoration:line-through;color:#bbb}
+        .task-chk{width:18px;height:18px;cursor:pointer;accent-color:#667eea;margin-top:2px;flex-shrink:0}
+        .task-content{flex:1;min-width:0}
+        .task-text{font-size:13px;word-break:break-word;line-height:1.5}
+        .task-text.editing{border:2px solid #667eea;padding:4px 6px;border-radius:6px;outline:none;width:100%;font-size:13px;font-family:inherit;display:block}
+        .task-priority{font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;display:inline-block;margin-top:3px}
+        .p-high{background:#fde8e8;color:#e74c3c}
+        .p-medium{background:#fff3e0;color:#f39c12}
+        .p-low{background:#e8f5e9;color:#27ae60}
+        .task-ops{display:flex;gap:3px;flex-shrink:0;opacity:0;transition:opacity .15s}
+        .task-item:hover .task-ops{opacity:1}
+        .task-op{width:24px;height:24px;border:none;border-radius:6px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .15s;background:#f0f0f0;color:#888}
+        .task-op:hover{background:#e0e0e0}
+        .task-op.del:hover{background:#ffcdd2;color:#e74c3c}
+        .card-empty{padding:30px 16px;text-align:center;color:#ccc;font-size:13px}
+        .card-empty .empty-icon{font-size:32px;margin-bottom:6px}
+        .global-empty{text-align:center;padding:80px 20px;color:rgba(255,255,255,.7)}
+        .global-empty .empty-icon{font-size:64px;margin-bottom:16px}
+        .global-empty p{font-size:16px}
+        /* 模态框 */
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center}
+        .modal-overlay.show{display:flex}
+        .modal{background:#fff;border-radius:16px;padding:28px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:modalIn .2s ease}
+        @keyframes modalIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+        .modal h3{font-size:18px;margin-bottom:20px;color:#2c3e50}
+        .modal .form-group{margin-bottom:16px}
+        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+        .m-btn{padding:10px 22px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+        .m-btn.primary{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+        .m-btn.primary:hover{transform:translateY(-1px)}
+        .m-btn.secondary{background:#f0f0f0;color:#666}
+        .m-btn.secondary:hover{background:#e0e0e0}
+        .m-btn.danger{background:#fde8e8;color:#e74c3c}
+        .m-btn.danger:hover{background:#ffcdd2}
+        .color-picker{display:flex;gap:8px;flex-wrap:wrap}
+        .color-opt{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .2s}
+        .color-opt:hover{transform:scale(1.15)}
+        .color-opt.sel{border-color:#333;box-shadow:0 0 0 2px #fff,0 0 0 4px #333}
+        /* 设置面板 */
+        .settings-panel{background:rgba(255,255,255,.95);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);display:none}
+        .settings-panel.show{display:block}
+        .settings-panel h3{font-size:16px;margin-bottom:6px;color:#2c3e50}
+        .settings-panel .desc{font-size:13px;color:#999;margin-bottom:16px;line-height:1.8}
+        .settings-panel .desc b{color:#555}
+        .settings-status{font-size:13px;padding:8px 12px;border-radius:8px;display:none;margin-top:8px}
+        .settings-status.ok{display:block;background:#e8f5e9;color:#27ae60}
+        .settings-status.err{display:block;background:#fde8e8;color:#e74c3c}
+        .settings-status.info{display:block;background:#e3f2fd;color:#1e90ff}
+        /* 加载遮罩 */
+        .loading-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.7);z-index:2000;display:none;justify-content:center;align-items:center;font-size:18px;color:#667eea}
+        .loading-mask.show{display:flex}
+        /* 响应式 */
+        @media(max-width:600px){
+            .auth-container{margin:40px 16px;padding:28px 20px}
+            .app-container{margin:12px auto}
+            .app-header{padding:12px 14px;flex-wrap:wrap;gap:6px}
+            .app-header h1{font-size:17px}
+            .user-email{max-width:90px}
+            .global-add{padding:12px}
+            .grid{grid-template-columns:1fr}
+            .task-ops{opacity:1}
+        }
+    </style>
 </head>
 <body>
-  <div class="chat-app">
-    <div class="chat-header">
-      <h1>实时聊天室</h1>
-      <div>
-        <button id="add-friend-btn" class="header-btn">添加好友</button>
-        <button id="friend-requests-btn" class="header-btn">好友请求 <span id="request-badge" class="badge" style="display:none">0</span></button>
-        <button id="settings-btn" class="header-btn">设置</button>
-        <button id="create-group-btn" class="header-btn">创建群聊</button>
-      </div>
+
+<!-- 登录 -->
+<div class="auth-container" id="authPanel">
+    <div class="logo">📝</div>
+    <h1 id="authTitle">登录备忘录</h1>
+    <p class="subtitle" id="authSubtitle">使用邮箱登录，云端同步，多设备共享</p>
+    <div class="form-group">
+        <label>邮箱地址</label>
+        <input type="email" id="authEmail" placeholder="your@email.com" autocomplete="email">
     </div>
-    <div class="chat-container">
-      <div class="chat-sidebar" id="chat-sidebar">
-        <h2>聊天</h2>
-        <div class="sidebar-section">
-          <h3>群聊</h3>
-          <div id="group-chats"></div>
+    <div class="form-group">
+        <label>密码</label>
+        <input type="password" id="authPassword" placeholder="请输入密码" autocomplete="current-password">
+    </div>
+    <div class="form-group" id="confirmGroup" style="display:none">
+        <label>确认密码</label>
+        <input type="password" id="authConfirm" placeholder="再次输入密码">
+    </div>
+    <div class="auth-error" id="authError"></div>
+    <button class="auth-btn" id="authBtn" onclick="handleAuth()">登录</button>
+    <div class="divider">或</div>
+    <button class="google-btn" onclick="googleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 010-9.18l-7.98-6.19a24.0 24.0 0 000 21.56l7.98-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Google 账号登录
+    </button>
+    <div class="auth-switch">
+        <span id="switchText">没有账号？</span>
+        <a id="switchLink" onclick="toggleAuthMode()">立即注册</a>
+    </div>
+</div>
+
+<!-- 主应用 -->
+<div class="app-container" id="appPanel">
+    <div class="app-header">
+        <h1>📝 备忘录</h1>
+        <div class="header-right">
+            <span class="sync-indicator" id="syncIndicator"></span>
+            <span class="user-email" id="userEmailDisplay"></span>
+            <button class="hdr-btn settings-btn" onclick="toggleSettings()">⚙️ 设置</button>
+            <button class="hdr-btn logout-btn" onclick="doLogout()">退出</button>
         </div>
-        <div class="sidebar-section">
-          <h3>好友</h3>
-          <div id="friends-list"></div>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settingsPanel">
+        <h3>☁️ 云端同步</h3>
+        <p class="desc">
+            数据通过 <b>Firebase</b> 实时同步，登录同一账号即可在电脑、手机上访问。<br>
+            修改数据后自动同步到云端，无需手动操作。
+        </p>
+        <div class="settings-status" id="settingsStatus"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="m-btn secondary" onclick="exportFile()" style="font-size:13px">📤 导出备份</button>
+            <button class="m-btn secondary" onclick="document.getElementById('importFileInput').click()" style="font-size:13px">📥 导入备份</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importFile(event)">
         </div>
-      </div>
-      <div class="chat-main">
-        <!-- 群聊信息栏 -->
-        <div class="group-info-bar" id="group-info-bar" style="display:none">
-          <div class="group-info-left">
-            <span class="group-info-name" id="group-info-name"></span>
-            <span class="group-info-count" id="group-info-count"></span>
-          </div>
-          <div class="group-info-actions">
-            <button class="group-action-btn" id="toggle-mgmt-btn">⚙️ 群管理</button>
-          </div>
+    </div>
+
+    <!-- 全局添加栏 -->
+    <div class="global-add">
+        <input type="text" id="taskInput" placeholder="输入新的备忘录..." onkeypress="if(event.key==='Enter')addTask()">
+        <select id="catSelect"></select>
+        <select id="priSelect">
+            <option value="low">🟢 低</option>
+            <option value="medium" selected>🟡 中</option>
+            <option value="high">🔴 高</option>
+        </select>
+        <button class="add-btn" onclick="addTask()">+ 添加</button>
+    </div>
+
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <div class="left" id="filterBar"></div>
+        <div class="right">
+            <span id="statsText"></span>
+            <button class="clear-btn" onclick="clearCompleted()">清除已完成</button>
         </div>
-        <!-- 群管理面板（折叠） -->
-        <div class="group-mgmt-panel" id="group-mgmt-panel" style="display:none">
-          <div class="mgmt-section">
-            <h4>👥 群成员 <span id="mgmt-member-count"></span></h4>
-            <div id="mgmt-members-list" class="mgmt-members-list"></div>
-          </div>
-          <div class="mgmt-section" id="mgmt-invite-section">
-            <h4>➕ 邀请好友</h4>
-            <div id="mgmt-invite-list" class="mgmt-members-list"></div>
-          </div>
-          <div class="mgmt-section mgmt-danger" id="mgmt-delete-section" style="display:none">
-            <h4>🗑️ 危险操作</h4>
-            <button class="group-action-btn group-delete-btn" id="delete-group-btn">删除此群聊</button>
-          </div>
+    </div>
+
+    <!-- 格子网格 -->
+    <div class="grid" id="grid"></div>
+</div>
+
+<!-- 分类模态框 -->
+<div class="modal-overlay" id="catModal">
+    <div class="modal">
+        <h3 id="catModalTitle">新建分类</h3>
+        <div class="form-group">
+            <label>分类名称</label>
+            <input type="text" id="catNameInput" placeholder="例如：语文、数学、工作..." maxlength="20">
         </div>
-        <div class="chat-messages" id="chat-messages"></div>
-        <!-- 右键菜单 -->
-        <div class="context-menu" id="context-menu">
-          <div class="context-menu-item" id="ctx-recall">撤回</div>
-          <div class="context-menu-item" id="ctx-quote">引用</div>
-          <div class="context-menu-item" id="ctx-delete">删除</div>
-          <div class="context-menu-item" id="ctx-forward">转发到群聊</div>
-          <div class="context-menu-item" id="ctx-mention">@ 他/她</div>
+        <div class="form-group">
+            <label>选择颜色</label>
+            <div class="color-picker" id="colorPicker"></div>
         </div>
-        <!-- 引用预览栏 -->
-        <div class="quote-preview-bar" id="quote-preview-bar" style="display:none">
-          <div class="quote-preview-content" id="quote-preview-content"></div>
-          <button class="quote-preview-close" id="quote-preview-close">✕</button>
+        <div class="modal-actions">
+            <button class="m-btn secondary" onclick="closeCatModal()">取消</button>
+            <button class="m-btn danger" id="delCatBtn" style="display:none" onclick="deleteCat()">删除分类</button>
+            <button class="m-btn primary" onclick="saveCat()">保存</button>
         </div>
-        <div class="chat-input-area" id="chat-input-area">
-          <input type="text" class="chat-input" id="chat-input" placeholder="输入消息...">
-          <button class="emoji-btn" id="emoji-btn">😊</button>
-          <button class="send-btn" id="send-btn">发送</button>
+    </div>
+</div>
+
+<!-- 确认模态框 -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+        <h3 id="cfmTitle">确认</h3>
+        <p id="cfmMsg" style="color:#666;margin-bottom:10px"></p>
+        <div class="modal-actions">
+            <button class="m-btn secondary" onclick="closeCfm()">取消</button>
+            <button class="m-btn danger" id="cfmOkBtn">确定</button>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <!-- 头像操作浮窗 -->
-  <div class="avatar-popover" id="avatar-popover">
-    <div class="avatar-popover-header">
-      <img id="popover-avatar" src="" alt="" class="avatar-popover-img">
-      <span id="popover-name" class="avatar-popover-name"></span>
-    </div>
-    <div class="avatar-popover-actions">
-      <div class="avatar-popover-btn" id="popover-mention">@ TA</div>
-      <div class="avatar-popover-btn" id="popover-add-friend">添加好友</div>
-      <div class="avatar-popover-btn" id="popover-already-friend">已是好友 ✓</div>
-    </div>
-  </div>
+<!-- 加载中 -->
+<div class="loading-mask" id="loadingMask">⏳ 同步中...</div>
 
-  <!-- 表情选择器 -->
-  <div class="emoji-picker" id="emoji-picker"></div>
+<!-- Firebase SDK (v9 compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-  <!-- 右键菜单（放在 chat-main 内部用 absolute 定位）-->
+<!-- Firebase 配置 -->
+<script src="firebase-config.js"></script>
 
-  <!-- 转发群聊选择模态框 -->
-  <div class="modal" id="forward-modal">
-    <div class="modal-content" style="max-width:400px">
-      <h2>转发消息</h2>
-      <div class="forward-quote-preview" id="forward-msg-preview"></div>
-      <h3 style="font-size:14px;color:#6c757d;margin-bottom:10px">选择要转发到的群聊</h3>
-      <div id="forward-group-list" class="group-friend-list"></div>
-      <div class="modal-buttons" style="margin-top:15px">
-        <button class="modal-btn cancel" id="cancel-forward">取消</button>
-        <button class="modal-btn create" id="confirm-forward">转发</button>
-      </div>
-    </div>
-  </div>
+<script>
+// ==================== 初始化 Firebase ====================
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db = firebase.database();
 
-  <!-- 添加好友模态框 -->
-  <div class="modal" id="add-friend-modal">
-    <div class="modal-content">
-      <h2>添加好友</h2>
-      <div class="search-container" style="margin-bottom:15px">
-        <input type="text" id="friend-search-input" placeholder="输入用户名搜索...">
-        <button id="friend-search-btn" class="modal-btn create" style="border-radius:0 5px 5px 0;margin:0;padding:10px 15px">搜索</button>
-      </div>
-      <div id="friend-search-results" class="friend-search-results"></div>
-      <div class="modal-buttons" style="margin-top:15px">
-        <button class="modal-btn cancel" id="cancel-add-friend">关闭</button>
-      </div>
-    </div>
-  </div>
+const COLORS=['#667eea','#764ba2','#f093fb','#4facfe','#00f2fe','#43e97b','#fa709a','#fee140','#a18cd1','#fbc2eb','#ff6b6b','#ffa502','#2ed573','#1e90ff','#ff4757'];
+const DEFAULT_CATS=[{id:'cat_default',name:'默认',color:'#78909c',isDefault:true}];
 
-  <!-- 好友请求模态框 -->
-  <div class="modal" id="friend-requests-modal">
-    <div class="modal-content">
-      <h2>好友请求</h2>
-      <div id="friend-requests-list" class="friend-requests-list"></div>
-      <div class="modal-buttons" style="margin-top:15px">
-        <button class="modal-btn cancel" id="cancel-friend-requests">关闭</button>
-      </div>
-    </div>
-  </div>
+let uid=null, categories=[...DEFAULT_CATS], tasks=[], filter='all', editingCatId=null;
+let syncTimer=null, isSyncing=false;
 
-  <!-- 创建群聊模态框 -->
-  <div class="modal" id="group-modal">
-    <div class="modal-content" style="max-width:450px">
-      <h2>创建群聊</h2>
-      <input type="text" id="group-name" placeholder="输入群聊名称">
-      <h3 style="font-size:14px;color:#6c757d;margin-bottom:10px">选择好友加入群聊</h3>
-      <div id="group-friend-list" class="group-friend-list"></div>
-      <div class="modal-buttons" style="margin-top:15px">
-        <button class="modal-btn cancel" id="cancel-group">取消</button>
-        <button class="modal-btn create" id="create-group-submit">创建</button>
-      </div>
-    </div>
-  </div>
+const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
+const showEl=(id,v)=>document.getElementById(id).style.display=v?'block':'none';
+const showErr=m=>{const e=document.getElementById('authError');e.textContent=m;e.style.display='block'};
+const hideErr=()=>document.getElementById('authError').style.display='none';
 
-  <!-- 已读未读详情模态框 -->
-  <div class="modal" id="read-status-modal">
-    <div class="modal-content" style="max-width:380px">
-      <h2>消息已读状态</h2>
-      <div class="read-status-sections">
-        <div class="read-status-section">
-          <h3 class="read-label read-label-done">✅ 已读 <span id="read-count-display">0</span> 人</h3>
-          <div id="read-members-list" class="read-members-list"></div>
-        </div>
-        <div class="read-status-section">
-          <h3 class="read-label read-label-pending">⏳ 未读 <span id="unread-count-display">0</span> 人</h3>
-          <div id="unread-members-list" class="read-members-list"></div>
-        </div>
-      </div>
-      <div class="modal-buttons" style="margin-top:15px">
-        <button class="modal-btn cancel" id="cancel-read-status">关闭</button>
-      </div>
-    </div>
-  </div>
+// ==================== Firebase Auth ====================
+let isReg=false;
+function toggleAuthMode(){
+    isReg=!isReg;hideErr();
+    document.getElementById('authTitle').textContent=isReg?'注册账号':'登录备忘录';
+    document.getElementById('authSubtitle').textContent=isReg?'创建账号，开始云端同步':'使用邮箱登录，多设备共享备忘录';
+    showEl('confirmGroup',isReg);
+    document.getElementById('authBtn').textContent=isReg?'注 册':'登 录';
+    document.getElementById('switchText').textContent=isReg?'已有账号？':'没有账号？';
+    document.getElementById('switchLink').textContent=isReg?'立即登录':'立即注册';
+}
 
-  <!-- 删除确认模态框 -->
-  <div class="modal" id="delete-confirm-modal">
-    <div class="modal-content" style="max-width:350px;text-align:center">
-      <h2 style="color:#dc3545">⚠️ 删除群聊</h2>
-      <p style="margin-bottom:20px;color:#555">确定要删除这个群聊吗？<br>所有消息将被清除，<strong>此操作不可撤销</strong>。</p>
-      <div class="modal-buttons" style="justify-content:center">
-        <button class="modal-btn cancel" id="cancel-delete">取消</button>
-        <button class="modal-btn" id="confirm-delete" style="background:#dc3545;color:white">确认删除</button>
-      </div>
-    </div>
-  </div>
+function handleAuth(){
+    hideErr();
+    const email=document.getElementById('authEmail').value.trim();
+    const pwd=document.getElementById('authPassword').value;
+    if(!email||!email.includes('@')){showErr('请输入有效的邮箱地址');return}
+    if(pwd.length<6){showErr('密码至少需要6个字符');return}
+    showLoading(true);
+    if(isReg){
+        const cf=document.getElementById('authConfirm').value;
+        if(pwd!==cf){showErr('两次密码不一致');showLoading(false);return}
+        auth.createUserWithEmailAndPassword(email,pwd)
+            .then(()=>showLoading(false))
+            .catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
+    }else{
+        auth.signInWithEmailAndPassword(email,pwd)
+            .then(()=>showLoading(false))
+            .catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
+    }
+}
 
-  <!-- 好友备注模态框 -->
-  <div class="modal" id="alias-modal">
-    <div class="modal-content" style="max-width:350px">
-      <h2>设置备注</h2>
-      <div id="alias-friend-info" style="display:flex;align-items:center;gap:10px;margin-bottom:15px">
-        <img id="alias-avatar" src="" alt="" class="search-result-avatar">
-        <span id="alias-name" style="font-weight:bold"></span>
-      </div>
-      <input type="text" id="alias-input" placeholder="输入备注名（留空则清除备注）">
-      <div class="modal-buttons">
-        <button class="modal-btn cancel" id="cancel-alias">取消</button>
-        <button class="modal-btn create" id="save-alias">保存</button>
-      </div>
-    </div>
-  </div>
+function googleLogin(){
+    const provider=new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).catch(e=>{showErr(friendlyError(e.code))});
+}
 
-  <!-- 设置模态框 -->
-  <div class="modal" id="settings-modal">
-    <div class="modal-content">
-      <h2>个人设置</h2>
-      <div class="avatar-section">
-        <div class="avatar-preview" id="avatar-preview">
-          <img id="avatar-img" src="https://via.placeholder.com/100" alt="头像">
-        </div>
-        <input type="file" id="avatar-upload" accept="image/*">
-        <label for="avatar-upload">上传头像</label>
-      </div>
-      <input type="text" id="nickname-input" placeholder="输入新昵称">
-      <div class="modal-buttons">
-        <button class="modal-btn cancel" id="cancel-settings">取消</button>
-        <button class="modal-btn create" id="save-settings">保存</button>
-      </div>
-    </div>
-  </div>
+function friendlyError(code){
+    const m={'auth/email-already-in-use':'该邮箱已注册','auth/user-not-found':'账号不存在','auth/wrong-password':'密码错误',
+        'auth/invalid-email':'邮箱格式不正确','auth/weak-password':'密码至少6个字符','auth/too-many-requests':'请求过于频繁，请稍后再试',
+        'auth/popup-closed-by-user':'登录窗口已关闭','auth/network-request-failed':'网络连接失败'};
+    return m[code]||'操作失败：'+code;
+}
 
-  <script src="script.js"></script>
+function doLogout(){
+    auth.signOut();
+    categories=[...DEFAULT_CATS];tasks=[];uid=null;
+    document.getElementById('appPanel').style.display='none';
+    document.getElementById('authPanel').style.display='block';
+    document.getElementById('authEmail').value='';
+    document.getElementById('authPassword').value='';
+    hideErr();
+}
+
+function showLoading(v){document.getElementById('loadingMask').className=v?'loading-mask show':'loading-mask'}
+function showSync(s,msg){
+    const el=document.getElementById('syncIndicator');
+    el.className='sync-indicator '+(s==='ok'?'ok':s==='err'?'err':'');
+    el.textContent=s==='ok'?'☁️ 已同步':s==='err'?'⚠️ 同步失败':'';
+    if(msg)setTimeout(()=>el.textContent='',4000);
+}
+
+// 监听认证状态
+auth.onAuthStateChanged(user=>{
+    if(user){
+        uid=user.uid;
+        document.getElementById('authPanel').style.display='none';
+        document.getElementById('appPanel').style.display='block';
+        document.getElementById('userEmailDisplay').textContent=user.email;
+        listenData();
+    }else if(!uid){
+        // 未登录，停留在登录页
+    }
+});
+
+// Enter 键登录
+document.getElementById('authPassword').onkeypress=e=>{if(e.key==='Enter')handleAuth()};
+document.getElementById('authConfirm').onkeypress=e=>{if(e.key==='Enter')handleAuth()};
+
+// ==================== Firebase Realtime Database ====================
+function getUserPath(){return 'users/'+uid}
+
+function listenData(){
+    if(!uid)return;
+    showLoading(true);
+    // 监听分类
+    db.ref(getUserPath()+'/cats').on('value',snap=>{
+        const val=snap.val();
+        categories=val?Object.values(val):[...DEFAULT_CATS];
+        // 确保默认分类存在
+        if(!categories.find(c=>c.id==='cat_default'))categories.unshift({id:'cat_default',name:'默认',color:'#78909c',isDefault:true});
+        renderAll();
+    });
+    // 监听任务
+    db.ref(getUserPath()+'/tasks').on('value',snap=>{
+        const val=snap.val();
+        tasks=val?Object.values(val):[];
+        renderAll();
+        showLoading(false);
+        showSync('ok',true);
+    });
+}
+
+function saveToFirebase(path,data){
+    if(!uid)return;
+    db.ref(getUserPath()+'/'+path).set(data).then(()=>showSync('ok',true)).catch(e=>{showSync('err',true);console.error('Firebase write error:',e)});
+}
+function saveAllToFirebase(){
+    const catsObj={};categories.forEach(c=>catsObj[c.id]=c);
+    const tasksObj={};tasks.forEach(t=>tasksObj[t.id]=t);
+    db.ref(getUserPath()).set({cats:catsObj,tasks:tasksObj,updatedAt:firebase.database.ServerValue.TIMESTAMP})
+        .then(()=>showSync('ok',true))
+        .catch(e=>{showSync('err',true);console.error('Firebase write error:',e)});
+}
+function scheduleSave(){
+    if(syncTimer)clearTimeout(syncTimer);
+    syncTimer=setTimeout(saveAllToFirebase,800);
+}
+
+// ==================== 设置 ====================
+function toggleSettings(){document.getElementById('settingsPanel').classList.toggle('show')}
+
+// ==================== 导出/导入 ====================
+function exportFile(){
+    const data={v:2,email:auth.currentUser?.email||'',cats:categories,tasks:tasks,ts:Date.now()};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=`备忘录_${new Date().toLocaleDateString().replace(/\//g,'-')}.json`;a.click();URL.revokeObjectURL(a.href);
+    const ss=document.getElementById('settingsStatus');ss.className='settings-status ok';ss.textContent='✅ 备份已下载';
+    setTimeout(()=>ss.style.display='none',3000);
+}
+function importFile(e){
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=function(ev){
+        try{
+            const d=JSON.parse(ev.target.result);
+            if(d.categories&&!d.cats)d.cats=d.categories;
+            if(d.tasks)d.tasks=d.tasks.map(t=>({id:t.id,text:t.text,catId:t.catId||t.categoryId||'cat_default',pri:t.pri||t.priority||'medium',completed:!!t.completed,createdAt:t.createdAt||Date.now()}));
+            if(!d.cats&&!d.tasks){alert('无效数据文件');return}
+            showCfm('导入数据',`即将导入 ${(d.tasks||[]).length} 条备忘录，当前数据将被覆盖。`,()=>{
+                categories=d.cats||[...DEFAULT_CATS];
+                tasks=d.tasks||[];
+                saveAllToFirebase();
+                const ss=document.getElementById('settingsStatus');ss.className='settings-status ok';ss.textContent='✅ 导入成功，数据已同步到云端';
+                setTimeout(()=>ss.style.display='none',3000);
+            });
+        }catch(err){alert('文件格式错误：'+err.message)}
+    };r.readAsText(f);e.target.value='';
+}
+
+// ==================== 分类 ====================
+function catById(id){return categories.find(c=>c.id===id)}
+function catCount(id){return tasks.filter(t=>t.catId===id).length}
+
+function openCatModal(editId){
+    editingCatId=editId||null;
+    document.getElementById('catModalTitle').textContent=editId?'编辑分类':'新建分类';
+    if(editId){const c=catById(editId);document.getElementById('catNameInput').value=c.name;showEl('delCatBtn',!c.isDefault);renderColors(c.color)}
+    else{document.getElementById('catNameInput').value='';showEl('delCatBtn',false);renderColors(COLORS[Math.floor(Math.random()*COLORS.length)])}
+    document.getElementById('catModal').classList.add('show');document.getElementById('catNameInput').focus();
+}
+function closeCatModal(){document.getElementById('catModal').classList.remove('show');editingCatId=null}
+function renderColors(sel){
+    const el=document.getElementById('colorPicker');el.innerHTML='';
+    COLORS.forEach(c=>{const d=document.createElement('div');d.className='color-opt'+(c===sel?' sel':'');d.style.background=c;d.onclick=()=>{el.querySelectorAll('.color-opt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel')};el.appendChild(d)});
+}
+function getSelColor(){const s=document.querySelector('#colorPicker .sel');return s?s.style.background:COLORS[0]}
+
+function saveCat(){
+    const name=document.getElementById('catNameInput').value.trim();if(!name){alert('请输入分类名称');return}
+    const color=getSelColor();
+    if(editingCatId){const c=catById(editingCatId);c.name=name;c.color=color}
+    else categories.push({id:'cat_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),name,color});
+    closeCatModal();renderAll();scheduleSave();
+}
+function deleteCat(){
+    if(!editingCatId)return;const c=catById(editingCatId);if(c.isDefault)return;
+    const cnt=catCount(editingCatId);
+    const doDel=()=>{tasks.forEach(t=>{if(t.catId===editingCatId)t.catId='cat_default'});categories=categories.filter(x=>x.id!==editingCatId);if(filter===editingCatId)filter='all';closeCatModal();renderAll();scheduleSave()};
+    if(cnt>0)showCfm('删除分类',`该分类下有 ${cnt} 条备忘录，删除后将移至"默认"。`,doDel);else doDel();
+}
+
+// ==================== 确认框 ====================
+function showCfm(t,m,ok){document.getElementById('cfmTitle').textContent=t;document.getElementById('cfmMsg').textContent=m;document.getElementById('confirmModal').classList.add('show');document.getElementById('cfmOkBtn').onclick=()=>{closeCfm();ok()}}
+function closeCfm(){document.getElementById('confirmModal').classList.remove('show')}
+
+// ==================== 任务操作 ====================
+function addTask(){
+    const input=document.getElementById('taskInput');const text=input.value.trim();if(!text)return;
+    const catId=document.getElementById('catSelect').value;const pri=document.getElementById('priSelect').value;
+    tasks.unshift({id:'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),text,catId,pri,completed:false,createdAt:Date.now()});
+    input.value='';renderAll();scheduleSave();
+}
+function addTaskToCat(catId){
+    const input=document.getElementById('cardInput_'+catId);const text=input.value.trim();if(!text)return;
+    tasks.unshift({id:'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),text,catId,pri:'medium',completed:false,createdAt:Date.now()});
+    input.value='';renderAll();scheduleSave();
+}
+function toggleTask(id){const t=tasks.find(x=>x.id===id);if(t){t.completed=!t.completed;renderAll();scheduleSave()}}
+function deleteTask(id){tasks=tasks.filter(x=>x.id!==id);renderAll();scheduleSave()}
+function editTask(taskId){
+    const el=document.querySelector('.task-item[data-id="'+taskId+'"]');if(!el)return;
+    const txt=el.querySelector('.task-text');const cur=txt.textContent;
+    const inp=document.createElement('input');inp.type='text';inp.value=cur;inp.className='task-text editing';
+    txt.replaceWith(inp);inp.focus();
+    const save=()=>{const t=tasks.find(x=>x.id===taskId);if(t){t.text=inp.value.trim()||cur;scheduleSave()}renderAll()};
+    inp.onkeypress=e=>{if(e.key==='Enter')save()};inp.onkeydown=e=>{if(e.key==='Escape')renderAll()};inp.onblur=save;
+}
+function clearCompleted(){const cnt=tasks.filter(t=>t.completed).length;if(!cnt)return;showCfm('清除已完成',`确定清除 ${cnt} 条已完成的备忘录？`,()=>{tasks=tasks.filter(t=>!t.completed);renderAll();scheduleSave()})}
+
+// ==================== 渲染 ====================
+function renderAll(){renderFilter();renderCatSelect();renderGrid()}
+
+function renderFilter(){
+    const el=document.getElementById('filterBar');el.innerHTML='';
+    const allBtn=document.createElement('span');allBtn.className='filter-chip'+(filter==='all'?' active':'');
+    allBtn.style.background=filter==='all'?'#667eea':'#f0f0f0';allBtn.style.color=filter==='all'?'#fff':'#666';
+    allBtn.textContent='全部('+tasks.filter(t=>!t.completed).length+')';allBtn.onclick=()=>{filter='all';renderAll()};el.appendChild(allBtn);
+    const addBtn=document.createElement('span');addBtn.className='filter-chip';addBtn.style.background='#f0f0f0';addBtn.style.color='#667eea';addBtn.textContent='+';addBtn.title='新建分类';addBtn.onclick=()=>openCatModal();el.appendChild(addBtn);
+    document.getElementById('statsText').textContent=tasks.length+' 条备忘录，'+tasks.filter(t=>t.completed).length+' 已完成';
+}
+
+function renderCatSelect(){const sel=document.getElementById('catSelect');const v=sel.value;sel.innerHTML='';categories.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o)});if(v&&categories.find(c=>c.id===v))sel.value=v}
+
+function renderGrid(){
+    const grid=document.getElementById('grid');grid.innerHTML='';
+    const cats=filter==='all'?categories:categories.filter(c=>c.id===filter);
+    if(cats.length===0){grid.innerHTML='<div class="global-empty"><div class="empty-icon">📋</div><p>点击上方 "+" 创建分类开始使用</p></div>';return}
+    const priOrd={high:0,medium:1,low:2};const priLabel={high:'🔴',medium:'🟡',low:'🟢'};
+    cats.forEach(cat=>{
+        const catTasks=tasks.filter(t=>t.catId===cat.id);
+        const incomplete=catTasks.filter(t=>!t.completed).sort((a,b)=>priOrd[a.pri]-priOrd[b.pri]);
+        const done=catTasks.filter(t=>t.completed);const sorted=[...incomplete,...done];
+        const card=document.createElement('div');card.className='cat-card';
+        const head=document.createElement('div');head.className='card-head';head.style.background=cat.color;
+        head.innerHTML=`<div class="cat-info"><div class="cat-icon" style="background:rgba(255,255,255,.25)">${cat.name[0]}</div><span class="cat-name">${esc(cat.name)}</span><span class="cat-count">${incomplete.length}/${catTasks.length}</span></div><div class="card-actions"><button class="card-act-btn" title="编辑分类" data-edit="${cat.id}">✏️</button></div>`;
+        head.querySelector('[data-edit]').onclick=()=>openCatModal(cat.id);card.appendChild(head);
+        const qa=document.createElement('div');qa.className='card-quick-add';
+        qa.innerHTML=`<input type="text" id="cardInput_${cat.id}" placeholder="快速添加..." onkeypress="if(event.key==='Enter')addTaskToCat('${cat.id}')"><button class="quick-add-btn" style="background:${cat.color}" onclick="addTaskToCat('${cat.id}')">+</button>`;
+        card.appendChild(qa);
+        const list=document.createElement('div');list.className='card-tasks';
+        if(sorted.length===0){list.innerHTML='<div class="card-empty"><div class="empty-icon">✨</div>暂无备忘录</div>'}
+        else{sorted.forEach(t=>{
+            const item=document.createElement('div');item.className='task-item'+(t.completed?' done':'');item.setAttribute('data-id',t.id);
+            item.innerHTML=`<input type="checkbox" class="task-chk" ${t.completed?'checked':''}><div class="task-content"><span class="task-text">${esc(t.text)}</span>${t.pri!=='medium'?'<span class="task-priority p-'+t.pri+'">'+priLabel[t.pri]+' '+(t.pri==='high'?'紧急':'不急')+'</span>':''}</div><div class="task-ops"><button class="task-op" title="编辑" data-e="${t.id}">✏</button><button class="task-op del" title="删除" data-d="${t.id}">✕</button></div>`;
+            item.querySelector('.task-chk').onchange=()=>toggleTask(t.id);
+            item.querySelector('[data-e]').onclick=()=>editTask(t.id);
+            item.querySelector('[data-d]').onclick=()=>deleteTask(t.id);
+            list.appendChild(item);
+        })}
+        card.appendChild(list);grid.appendChild(card);
+    });
+}
+</script>
 </body>
 </html>
