@@ -32,12 +32,9 @@
         .header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
         .user-email{font-size:12px;color:#999;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .hdr-btn{padding:7px 14px;border:none;border-radius:8px;font-size:12px;cursor:pointer;transition:all .2s;font-weight:500}
-        .cloud-btn{background:#e8f5e9;color:#27ae60}
-        .cloud-btn:hover{background:#c8e6c9}
-        .settings-btn{background:#fff3e0;color:#f39c12}
-        .settings-btn:hover{background:#ffe0b2}
-        .logout-btn{background:#fff0f0;color:#e74c3c}
-        .logout-btn:hover{background:#ffe0e0}
+        .cloud-btn{background:#e8f5e9;color:#27ae60}.cloud-btn:hover{background:#c8e6c9}
+        .settings-btn{background:#fff3e0;color:#f39c12}.settings-btn:hover{background:#ffe0b2}
+        .logout-btn{background:#fff0f0;color:#e74c3c}.logout-btn:hover{background:#ffe0e0}
         .sync-indicator{font-size:11px;padding:3px 8px;border-radius:10px;display:none}
         .sync-indicator.ok{display:inline;background:#e8f5e9;color:#27ae60}
         .sync-indicator.err{display:inline;background:#fde8e8;color:#e74c3c}
@@ -84,9 +81,7 @@
         .task-text{font-size:13px;word-break:break-word;line-height:1.5}
         .task-text.editing{border:2px solid #667eea;padding:4px 6px;border-radius:6px;outline:none;width:100%;font-size:13px;font-family:inherit;display:block}
         .task-priority{font-size:10px;padding:1px 6px;border-radius:8px;font-weight:600;display:inline-block;margin-top:3px}
-        .p-high{background:#fde8e8;color:#e74c3c}
-        .p-medium{background:#fff3e0;color:#f39c12}
-        .p-low{background:#e8f5e9;color:#27ae60}
+        .p-high{background:#fde8e8;color:#e74c3c}.p-medium{background:#fff3e0;color:#f39c12}.p-low{background:#e8f5e9;color:#27ae60}
         .task-ops{display:flex;gap:3px;flex-shrink:0;opacity:0;transition:opacity .15s}
         .task-item:hover .task-ops{opacity:1}
         .task-op{width:24px;height:24px;border:none;border-radius:6px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .15s;background:#f0f0f0;color:#888}
@@ -126,29 +121,8 @@
         .settings-status.info{display:block;background:#e3f2fd;color:#1e90ff}
         .loading-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.7);z-index:2000;display:none;justify-content:center;align-items:center;font-size:18px;color:#667eea}
         .loading-mask.show{display:flex}
-        /* 验证码面板 */
-        .verify-container{max-width:420px;margin:80px auto;padding:40px 36px;background:rgba(255,255,255,.95);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;display:none}
-        .verify-container .verify-icon{font-size:56px;margin-bottom:12px}
-        .verify-container h1{font-size:24px;color:#2c3e50;margin-bottom:6px}
-        .verify-container .verify-email{color:#667eea;font-weight:600;font-size:14px;margin-bottom:24px}
-        .code-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
-        .code-inputs input{
-            width:52px;height:62px;text-align:center;font-size:28px;font-weight:700;
-            border:2px solid #e0e0e0;border-radius:12px;outline:none;transition:all .2s;
-            background:#fafafa;color:#2c3e50;
-        }
-        .code-inputs input:focus{border-color:#667eea;background:#fff;box-shadow:0 0 0 3px rgba(102,126,234,.2)}
-        .code-inputs input.filled{border-color:#667eea;background:#f0f0ff}
-        .code-inputs input.error{border-color:#e74c3c;background:#fff5f5;animation:shake .3s}
-        @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
-        .verify-timer{font-size:13px;color:#999;margin-bottom:20px}
-        .verify-timer a{color:#667eea;cursor:pointer;font-weight:600}
-        .verify-timer a:hover{text-decoration:underline}
-        .verify-timer a.disabled{color:#ccc;cursor:not-allowed;pointer-events:none}
-        .verify-hint{font-size:12px;color:#bbb;margin-top:16px}
-        .verify-container .auth-error{margin-top:12px}
         @media(max-width:600px){
-            .auth-container,.verify-container{margin:40px 16px;padding:28px 20px}
+            .auth-container{margin:40px 16px;padding:28px 20px}
             .app-container{margin:12px auto}
             .app-header{padding:12px 14px;flex-wrap:wrap;gap:6px}
             .app-header h1{font-size:17px}
@@ -156,7 +130,6 @@
             .global-add{padding:12px}
             .grid{grid-template-columns:1fr}
             .task-ops{opacity:1}
-            .code-inputs input{width:44px;height:54px;font-size:24px}
         }
     </style>
 </head>
@@ -167,18 +140,9 @@
     <div class="logo">📝</div>
     <h1 id="authTitle">登录备忘录</h1>
     <p class="subtitle" id="authSubtitle">使用邮箱登录，云端同步，多设备共享</p>
-    <div class="form-group">
-        <label>邮箱地址</label>
-        <input type="email" id="authEmail" placeholder="your@email.com" autocomplete="email">
-    </div>
-    <div class="form-group">
-        <label>密码</label>
-        <input type="password" id="authPassword" placeholder="请输入密码" autocomplete="current-password">
-    </div>
-    <div class="form-group" id="confirmGroup" style="display:none">
-        <label>确认密码</label>
-        <input type="password" id="authConfirm" placeholder="再次输入密码">
-    </div>
+    <div class="form-group"><label>邮箱地址</label><input type="email" id="authEmail" placeholder="your@email.com" autocomplete="email"></div>
+    <div class="form-group"><label>密码</label><input type="password" id="authPassword" placeholder="请输入密码" autocomplete="current-password"></div>
+    <div class="form-group" id="confirmGroup" style="display:none"><label>确认密码</label><input type="password" id="authConfirm" placeholder="再次输入密码"></div>
     <div class="auth-error" id="authError"></div>
     <button class="auth-btn" id="authBtn" onclick="handleAuth()">登录</button>
     <div class="divider">或</div>
@@ -186,30 +150,17 @@
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#34A853" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 010-9.18l-7.98-6.19a24.0 24.0 0 000 21.56l7.98-6.19z"/><path fill="#EA4335" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
         Google 账号登录
     </button>
-    <div class="auth-switch">
-        <span id="switchText">没有账号？</span>
-        <a id="switchLink" onclick="toggleAuthMode()">立即注册</a>
-    </div>
+    <div class="auth-switch"><span id="switchText">没有账号？</span><a id="switchLink" onclick="toggleAuthMode()">立即注册</a></div>
 </div>
 
-<!-- 验证码面板 -->
-<div class="verify-container" id="verifyPanel">
-    <div class="verify-icon">🔐</div>
-    <h1>邮箱验证码</h1>
-    <p style="color:#666;font-size:14px;margin-bottom:6px">验证码已发送至</p>
-    <p class="verify-email" id="verifyEmail"></p>
-    <div class="code-inputs" id="codeInputs">
-        <input type="text" maxlength="1" inputmode="numeric" data-index="0">
-        <input type="text" maxlength="1" inputmode="numeric" data-index="1">
-        <input type="text" maxlength="1" inputmode="numeric" data-index="2">
-        <input type="text" maxlength="1" inputmode="numeric" data-index="3">
-        <input type="text" maxlength="1" inputmode="numeric" data-index="4">
-        <input type="text" maxlength="1" inputmode="numeric" data-index="5">
-    </div>
-    <div class="auth-error" id="verifyError"></div>
-    <div class="verify-timer" id="verifyTimer"></div>
-    <button class="auth-btn" onclick="goBackFromVerify()" style="background:#f0f0f0;color:#666;font-size:14px">返回登录</button>
-    <p class="verify-hint">没收到邮件？检查垃圾邮件箱，或点击上方重新发送</p>
+<!-- 注册成功提示（去邮箱验证） -->
+<div class="auth-container" id="verifyPanel" style="display:none;text-align:center">
+    <div class="logo" style="font-size:56px">📧</div>
+    <h1>验证你的邮箱</h1>
+    <p class="subtitle">验证邮件已发送至 <b id="verifyEmail"></b></p>
+    <p style="color:#666;font-size:14px;margin-bottom:24px;line-height:1.8">请打开邮箱点击验证链接完成注册<br>验证后即可登录使用</p>
+    <button class="auth-btn" onclick="backToLogin()" style="font-size:14px">返回登录</button>
+    <div class="auth-switch" style="margin-top:12px"><a onclick="resendVerify()">没收到？重新发送</a></div>
 </div>
 
 <!-- 主应用 -->
@@ -259,7 +210,6 @@
         </div>
     </div>
 </div>
-<!-- 确认模态框 -->
 <div class="modal-overlay" id="confirmModal">
     <div class="modal">
         <h3 id="cfmTitle">确认</h3>
@@ -272,30 +222,25 @@
 </div>
 <div class="loading-mask" id="loadingMask">⏳ 同步中...</div>
 
-<!-- SDK -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="firebase-config.js"></script>
 
 <script>
 // ==================== 初始化 ====================
 firebase.initializeApp(FIREBASE_CONFIG);
 const auth=firebase.auth(),db=firebase.database();
-emailjs.init(EMAILJS_CONFIG.publicKey);
 
 const COLORS=['#667eea','#764ba2','#f093fb','#4facfe','#00f2fe','#43e97b','#fa709a','#fee140','#a18cd1','#fbc2eb','#ff6b6b','#ffa502','#2ed573','#1e90ff','#ff4757'];
 const DEFAULT_CATS=[{id:'cat_default',name:'默认',color:'#78909c',isDefault:true}];
 let uid=null,categories=[...DEFAULT_CATS],tasks=[],filter='all',editingCatId=null,syncTimer=null;
-let pendingVerifyEmail='',pendingVerifyUid='',verifyCountdown=0,verifyTimerHandle=null;
 
 const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
 const showEl=(id,v)=>document.getElementById(id).style.display=v?'block':'none';
 const showErr=m=>{const e=document.getElementById('authError');e.textContent=m;e.style.display='block'};
 const hideErr=()=>document.getElementById('authError').style.display='none';
-const showVerifyErr=m=>{const e=document.getElementById('verifyError');e.textContent=m;e.style.display='block'};
-const hideVerifyErr=()=>document.getElementById('verifyError').style.display='none';
 function showLoading(v){document.getElementById('loadingMask').className=v?'loading-mask show':'loading-mask'}
 function showSync(s,msg){const el=document.getElementById('syncIndicator');el.className='sync-indicator '+(s==='ok'?'ok':s==='err'?'err':'');el.textContent=s==='ok'?'☁️ 已同步':s==='err'?'⚠️ 失败':'';if(msg)setTimeout(()=>el.textContent='',4000)}
 
@@ -313,23 +258,23 @@ function handleAuth(){
         const cf=document.getElementById('authConfirm').value;
         if(pwd!==cf){showErr('两次密码不一致');showLoading(false);return}
         auth.createUserWithEmailAndPassword(email,pwd).then(cred=>{
-            pendingVerifyEmail=email;pendingVerifyUid=cred.user.uid;
-            sendVerificationCode(email,cred.user.uid);
+            cred.user.sendEmailVerification();
             showLoading(false);showVerifyPanel(email);
         }).catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
     }else{
-        auth.signInWithEmailAndPassword(email,pwd).then(cred=>{
-            if(!cred.user.emailVerified){
-                pendingVerifyEmail=email;pendingVerifyUid=cred.user.uid;
-                showLoading(false);showVerifyPanel(email);
-            }else{showLoading(false)}
-        }).catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
+        // 登录直接进，不验证邮箱
+        auth.signInWithEmailAndPassword(email,pwd).then(()=>showLoading(false)).catch(e=>{showErr(friendlyError(e.code));showLoading(false)});
     }
 }
 
 function googleLogin(){const p=new firebase.auth.GoogleAuthProvider();auth.signInWithPopup(p).catch(e=>{showErr(friendlyError(e.code))})}
 
 function friendlyError(c){const m={'auth/email-already-in-use':'该邮箱已注册','auth/user-not-found':'账号不存在','auth/wrong-password':'密码错误','auth/invalid-email':'邮箱格式不正确','auth/weak-password':'密码至少6个字符','auth/too-many-requests':'请求过于频繁，请稍后再试','auth/popup-closed-by-user':'登录窗口已关闭','auth/network-request-failed':'网络连接失败'};return m[c]||'操作失败：'+c}
+
+// 验证面板
+function showVerifyPanel(email){document.getElementById('authPanel').style.display='none';document.getElementById('appPanel').style.display='none';document.getElementById('verifyPanel').style.display='block';document.getElementById('verifyEmail').textContent=email}
+function backToLogin(){auth.signOut();document.getElementById('verifyPanel').style.display='none';document.getElementById('authPanel').style.display='block';hideErr()}
+function resendVerify(){const user=auth.currentUser;if(user)user.sendEmailVerification().then(()=>alert('验证邮件已重新发送，请查收'))}
 
 function doLogout(){
     auth.signOut();categories=[...DEFAULT_CATS];tasks=[];uid=null;
@@ -339,151 +284,23 @@ function doLogout(){
     document.getElementById('authEmail').value='';document.getElementById('authPassword').value='';hideErr();
 }
 
-// ==================== 自定义验证码 ====================
-function generateCode(){return String(Math.floor(100000+Math.random()*900000))}
-
-function sendVerificationCode(email,targetUid){
-    const code=generateCode();
-    const expiresAt=Date.now()+10*60*1000; // 10分钟有效
-    // 存到 Firebase Realtime Database
-    db.ref('verifyCodes/'+targetUid).set({code,expiresAt,email});
-    // 发送邮件
-    emailjs.send(EMAILJS_CONFIG.serviceID,EMAILJS_CONFIG.templateID,{
-        to_email:email,
-        code:code,
-        time:'10分钟'
-    }).then(()=>console.log('验证码已发送')).catch(e=>console.error('邮件发送失败:',e));
-    // 启动倒计时
-    startVerifyCountdown();
-}
-
-function showVerifyPanel(email){
-    document.getElementById('authPanel').style.display='none';
-    document.getElementById('appPanel').style.display='none';
-    document.getElementById('verifyPanel').style.display='block';
-    document.getElementById('verifyEmail').textContent=email;
-    hideVerifyErr();
-    // 清空输入框
-    document.querySelectorAll('#codeInputs input').forEach(inp=>{inp.value='';inp.classList.remove('filled','error')});
-    document.querySelector('#codeInputs input[data-index="0"]').focus();
-    if(!verifyCountdown)sendVerificationCode(email,pendingVerifyUid);
-}
-
-function startVerifyCountdown(){
-    verifyCountdown=60;
-    if(verifyTimerHandle)clearInterval(verifyTimerHandle);
-    updateTimerDisplay();
-    verifyTimerHandle=setInterval(()=>{
-        verifyCountdown--;
-        updateTimerDisplay();
-        if(verifyCountdown<=0)clearInterval(verifyTimerHandle);
-    },1000);
-}
-
-function updateTimerDisplay(){
-    const el=document.getElementById('verifyTimer');
-    if(verifyCountdown>0){el.innerHTML=`<span style="color:#999">${verifyCountdown}s 后可重新发送</span>`}
-    else{el.innerHTML=`<a onclick="resendCode()">重新发送验证码</a>`}
-}
-
-function resendCode(){
-    if(verifyCountdown>0)return;
-    if(pendingVerifyEmail&&pendingVerifyUid){
-        sendVerificationCode(pendingVerifyEmail,pendingVerifyUid);
-        hideVerifyErr();
-        document.querySelectorAll('#codeInputs input').forEach(inp=>{inp.value='';inp.classList.remove('filled','error')});
-        document.querySelector('#codeInputs input[data-index="0"]').focus();
+// ==================== 认证状态 ====================
+auth.onAuthStateChanged(user=>{
+    if(user){
+        uid=user.uid;
+        document.getElementById('authPanel').style.display='none';
+        document.getElementById('verifyPanel').style.display='none';
+        document.getElementById('appPanel').style.display='block';
+        document.getElementById('userEmailDisplay').textContent=user.email;
+        listenData();
+    }else if(!uid){
+        document.getElementById('verifyPanel').style.display='none';
     }
-}
-
-function verifyCode(){
-    const inputs=document.querySelectorAll('#codeInputs input');
-    let code='';inputs.forEach(inp=>code+=inp.value);
-    if(code.length<6)return;
-    hideVerifyErr();
-    // 从 Firebase 验证
-    db.ref('verifyCodes/'+pendingVerifyUid).once('value',snap=>{
-        const data=snap.val();
-        if(!data){showVerifyErr('验证码不存在，请重新发送');inputs.forEach(i=>i.classList.add('error'));return}
-        if(Date.now()>data.expiresAt){showVerifyErr('验证码已过期，请重新发送');inputs.forEach(i=>i.classList.add('error'));return}
-        if(data.code!==code){showVerifyErr('验证码错误');inputs.forEach(i=>i.classList.add('error'));return}
-        // 验证通过！标记邮箱已验证
-        db.ref('verifiedEmails/'+pendingVerifyUid).set({email:pendingVerifyEmail,verifiedAt:firebase.database.ServerValue.TIMESTAMP});
-        db.ref('verifyCodes/'+pendingVerifyUid).remove();
-        // 设置自定义 claims 或直接放行
-        enterApp(pendingVerifyUid,pendingVerifyEmail);
-    });
-}
-
-function enterApp(userId,email){
-    uid=userId;
-    document.getElementById('verifyPanel').style.display='none';
-    document.getElementById('authPanel').style.display='none';
-    document.getElementById('appPanel').style.display='block';
-    document.getElementById('userEmailDisplay').textContent=email;
-    listenData();
-}
-
-function goBackFromVerify(){
-    auth.signOut();
-    document.getElementById('verifyPanel').style.display='none';
-    document.getElementById('authPanel').style.display='block';
-    hideErr();hideVerifyErr();
-    if(verifyTimerHandle)clearInterval(verifyTimerHandle);
-    verifyCountdown=0;
-}
-
-// 验证码输入框自动跳转
-document.querySelectorAll('#codeInputs input').forEach(inp=>{
-    inp.addEventListener('input',function(){
-        this.value=this.value.replace(/[^0-9]/g,'');
-        this.classList.toggle('filled',this.value!=='');
-        if(this.value&&this.dataset.index<5){
-            document.querySelector('#codeInputs input[data-index="'+(parseInt(this.dataset.index)+1)+'"]').focus();
-        }
-        if(this.value&&this.dataset.index==='5'){verifyCode()}
-    });
-    inp.addEventListener('keydown',function(e){
-        if(e.key==='Backspace'&&!this.value&&this.dataset.index>0){
-            const prev=document.querySelector('#codeInputs input[data-index="'+(parseInt(this.dataset.index)-1)+'"]');
-            prev.focus();prev.value='';prev.classList.remove('filled');
-        }
-    });
-    inp.addEventListener('paste',function(e){
-        e.preventDefault();
-        const text=(e.clipboardData||window.clipboardData).getData('text').replace(/[^0-9]/g,'').slice(0,6);
-        text.split('').forEach((ch,i)=>{
-            const target=document.querySelector('#codeInputs input[data-index="'+i+'"]');
-            if(target){target.value=ch;target.classList.add('filled')}
-        });
-        if(text.length===6)verifyCode();
-        else if(text.length>0)document.querySelector('#codeInputs input[data-index="'+text.length+'"]').focus();
-    });
 });
 
 // Enter 键
 document.getElementById('authPassword').onkeypress=e=>{if(e.key==='Enter')handleAuth()};
 document.getElementById('authConfirm').onkeypress=e=>{if(e.key==='Enter')handleAuth()};
-
-// ==================== 认证状态监听 ====================
-auth.onAuthStateChanged(user=>{
-    if(user){
-        pendingVerifyUid=user.uid;pendingVerifyEmail=user.email;
-        // 检查是否已通过自定义验证码验证
-        db.ref('verifiedEmails/'+user.uid).once('value',snap=>{
-            if(snap.val()){
-                uid=user.uid;
-                document.getElementById('verifyPanel').style.display='none';
-                document.getElementById('authPanel').style.display='none';
-                document.getElementById('appPanel').style.display='block';
-                document.getElementById('userEmailDisplay').textContent=user.email;
-                listenData();
-            }else{
-                showVerifyPanel(user.email);
-            }
-        });
-    }
-});
 
 // ==================== Firebase Database ====================
 function getUserPath(){return 'users/'+uid}
