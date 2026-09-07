@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>备忘录</title>
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="备忘录">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;line-height:1.6}
@@ -347,6 +354,17 @@ function renderAll(){renderFilter();renderCatSelect();renderGrid()}
 function renderFilter(){const el=document.getElementById('filterBar');el.innerHTML='';const allBtn=document.createElement('span');allBtn.className='filter-chip'+(filter==='all'?' active':'');allBtn.style.background=filter==='all'?'#667eea':'#f0f0f0';allBtn.style.color=filter==='all'?'#fff':'#666';allBtn.textContent='全部('+tasks.filter(t=>!t.completed).length+')';allBtn.onclick=()=>{filter='all';renderAll()};el.appendChild(allBtn);const addBtn=document.createElement('span');addBtn.className='filter-chip';addBtn.style.background='#f0f0f0';addBtn.style.color='#667eea';addBtn.textContent='+';addBtn.title='新建分类';addBtn.onclick=()=>openCatModal();el.appendChild(addBtn);document.getElementById('statsText').textContent=tasks.length+' 条备忘录，'+tasks.filter(t=>t.completed).length+' 已完成'}
 function renderCatSelect(){const sel=document.getElementById('catSelect');const v=sel.value;sel.innerHTML='';categories.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o)});if(v&&categories.find(c=>c.id===v))sel.value=v}
 function renderGrid(){const grid=document.getElementById('grid');grid.innerHTML='';const cats=filter==='all'?categories:categories.filter(c=>c.id===filter);if(cats.length===0){grid.innerHTML='<div class="global-empty"><div class="empty-icon">📋</div><p>点击上方 "+" 创建分类开始使用</p></div>';return}const priOrd={high:0,medium:1,low:2};const priLabel={high:'🔴',medium:'🟡',low:'🟢'};cats.forEach(cat=>{const catTasks=tasks.filter(t=>t.catId===cat.id);const incomplete=catTasks.filter(t=>!t.completed).sort((a,b)=>priOrd[a.pri]-priOrd[b.pri]);const done=catTasks.filter(t=>t.completed);const sorted=[...incomplete,...done];const card=document.createElement('div');card.className='cat-card';const head=document.createElement('div');head.className='card-head';head.style.background=cat.color;head.innerHTML=`<div class="cat-info"><div class="cat-icon" style="background:rgba(255,255,255,.25)">${cat.name[0]}</div><span class="cat-name">${esc(cat.name)}</span><span class="cat-count">${incomplete.length}/${catTasks.length}</span></div><div class="card-actions"><button class="card-act-btn" title="编辑分类" data-edit="${cat.id}">✏️</button></div>`;head.querySelector('[data-edit]').onclick=()=>openCatModal(cat.id);card.appendChild(head);const qa=document.createElement('div');qa.className='card-quick-add';qa.innerHTML=`<input type="text" id="cardInput_${cat.id}" placeholder="快速添加..." onkeypress="if(event.key==='Enter')addTaskToCat('${cat.id}')"><button class="quick-add-btn" style="background:${cat.color}" onclick="addTaskToCat('${cat.id}')">+</button>`;card.appendChild(qa);const list=document.createElement('div');list.className='card-tasks';if(sorted.length===0){list.innerHTML='<div class="card-empty"><div class="empty-icon">✨</div>暂无备忘录</div>'}else{sorted.forEach(t=>{const item=document.createElement('div');item.className='task-item'+(t.completed?' done':'');item.setAttribute('data-id',t.id);item.innerHTML=`<input type="checkbox" class="task-chk" ${t.completed?'checked':''}><div class="task-content"><span class="task-text">${esc(t.text)}</span>${t.pri!=='medium'?'<span class="task-priority p-'+t.pri+'">'+priLabel[t.pri]+' '+(t.pri==='high'?'紧急':'不急')+'</span>':''}</div><div class="task-ops"><button class="task-op" title="编辑" data-e="${t.id}">✏</button><button class="task-op del" title="删除" data-d="${t.id}">✕</button></div>`;item.querySelector('.task-chk').onchange=()=>toggleTask(t.id);item.querySelector('[data-e]').onclick=()=>editTask(t.id);item.querySelector('[data-d]').onclick=()=>deleteTask(t.id);list.appendChild(item)})}card.appendChild(list);grid.appendChild(card)})}
+</script>
+
+<!-- PWA Service Worker 注册 -->
+<script>
+if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('service-worker.js')
+            .then(reg=>console.log('SW registered:',reg.scope))
+            .catch(err=>console.error('SW registration failed:',err));
+    });
+}
 </script>
 </body>
 </html>
