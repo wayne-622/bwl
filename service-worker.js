@@ -1,62 +1,84 @@
-const CACHE_NAME = 'memo-app-v1';
-const ASSETS = [
+const CACHE_NAME = 'memo-app-v4';
+const CORE_ASSETS = [
     './',
     './index.html',
     './firebase-config.js',
     './manifest.json',
     './icons/icon-192.png',
-    './icons/icon-512.png',
+    './icons/icon-512.png'
+];
+const CDN_ASSETS = [
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
     'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js'
 ];
 
-// 安装：预缓存静态资源
+// 安装：预缓存静态资源。单个资源失败不阻断安装
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+        caches.open(CACHE_NAME).then(cache =>
+            Promise.all(
+                [...CORE_ASSETS, ...CDN_ASSETS].map(url =>
+                    cache.add(url).catch(() => null)
+                )
+            )
+        ).then(() => self.skipWaiting())
     );
-    self.skipWaiting();
 });
 
-// 激活：清理旧缓存
+// 激活：清理旧缓存并立即接管
 self.addEventListener('activate', event => {
     event.waitUntil(
-        caches.keys().then(keys =>
-            Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-        )
+        caches.keys()
+            .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+            .then(() => self.clients.claim())
     );
-    self.clients.claim();
 });
 
-// 请求拦截：缓存优先，网络回退；Firebase API 走网络
-self.addEventListener('fetch', event => {
-    const url = new URL(event.request.url);
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
 
-    // Firebase API 请求始终走网络
+// 请求拦截
+self.addEventListener('fetch', event => {
+    const request = event.request;
+    if (request.method !== 'GET') return;
+
+    const url = new URL(request.url);
+
+    // Firebase 接口始终走网络
     if (url.hostname.includes('firebaseio.com') ||
-        url.hostname.includes('googleapis.com') && url.pathname.includes('identitytoolkit') ||
-        url.hostname.includes('googleapis.com') && url.pathname.includes('securetoken')) {
-        event.respondWith(fetch(event.request));
+        url.hostname.includes('firebaseapp.com') ||
+        (url.hostname.includes('googleapis.com') &&
+            (url.pathname.includes('identitytoolkit') || url.pathname.includes('securetoken')))) {
         return;
     }
 
-    // 其他请求：缓存优先，失败再走网络
+    // 页面导航：网络优先，保证更新能及时生效；离线时回退缓存
+    if (request.mode === 'navigate' || request.destination === 'document') {
+        event.respondWith(
+            fetch(request).then(response => {
+                const copy = response.clone();
+                caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy)).catch(() => {});
+                return response;
+            }).catch(() =>
+                caches.match(request).then(cached => cached || caches.match('./index.html'))
+            )
+        );
+        return;
+    }
+
+    // 静态资源：缓存优先，同时后台更新
     event.respondWith(
-        caches.match(event.request).then(cached => {
-            return cached || fetch(event.request).then(response => {
-                // 动态缓存新资源
-                if (response.ok && response.type === 'basic') {
-                    const clone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        caches.match(request).then(cached => {
+            const network = fetch(request).then(response => {
+                if (response && (response.ok || response.type === 'opaque')) {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(request, copy)).catch(() => {});
                 }
                 return response;
-            });
-        }).catch(() => {
-            // 离线且无缓存时的回退
-            if (event.request.destination === 'document') {
-                return caches.match('./index.html');
-            }
+            }).catch(() => cached);
+            return cached || network;
         })
     );
 });

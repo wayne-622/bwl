@@ -1,0 +1,21 @@
+{
+  "name": "memo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "备忘录（响应式网站 + PWA + Android + Windows 桌面）",
+  "scripts": {
+    "sync:web": "node scripts/sync-web.js",
+    "cap:sync": "npm run sync:web && cap sync android",
+    "android": "npm run cap:sync && cd android && gradlew assembleDebug",
+    "desktop:build": "npm run sync:web && powershell -ExecutionPolicy Bypass -File scripts/build-desktop.ps1",
+    "installer": "npm run desktop:build && \"C:\\Users\\wanjiahao\\AppData\\Local\\Programs\\Inno Setup 6\\ISCC.exe\" /Q scripts\\installer.iss"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.6.0",
+    "@capacitor/core": "8.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "8.6.0"
+  }
+}
