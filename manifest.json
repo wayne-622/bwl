@@ -1,24 +1,56 @@
 {
+    "id": "./",
     "name": "备忘录",
     "short_name": "备忘录",
-    "description": "云端同步备忘录，多设备共享",
+    "description": "云端同步备忘录，多设备共享。登录一次，本设备保持登录。",
+    "lang": "zh-CN",
+    "dir": "ltr",
     "start_url": "./index.html",
+    "scope": "./",
     "display": "standalone",
+    "display_override": ["standalone", "minimal-ui"],
+    "orientation": "portrait",
     "background_color": "#667eea",
     "theme_color": "#667eea",
-    "orientation": "any",
+    "categories": ["productivity", "utilities"],
     "icons": [
         {
             "src": "icons/icon-192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "any"
         },
         {
             "src": "icons/icon-512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "新建备忘录",
+            "short_name": "新建",
+            "description": "快速创建一条备忘录",
+            "url": "./index.html?action=new",
+            "icons": [
+                {
+                    "src": "icons/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ]
 }

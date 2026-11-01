@@ -1,0 +1,11 @@
+{
+  "appId": "com.wayne.memo",
+  "appName": "备忘录",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
